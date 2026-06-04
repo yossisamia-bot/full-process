@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>התהליך המלא — משקיע ארה״ב</title>
+<style>
+  :root{
+    --blue-header:#2f5496; --blue-section:#4472c4;
+    --bg:#eef2f7; --card:#ffffff; --text:#1a1a2e; --muted:#6b7280;
+    --line:#e2e8f0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); padding:16px; line-height:1.5;}
+  .wrap{max-width:840px; margin:0 auto;}
+
+  header{
+    background:linear-gradient(135deg,#2f5496,#4472c4); color:#fff;
+    border-radius:14px; padding:22px 24px; box-shadow:0 4px 18px rgba(0,0,0,.12);
+  }
+  header h1{font-size:1.5rem; font-weight:700; letter-spacing:-.3px;}
+  header .sub{font-size:.85rem; opacity:.9; margin-top:6px;}
+
+  /* Toolbar */
+  .toolbar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    background:var(--card); border-radius:12px; padding:12px 16px; margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+  }
+  .track-toggle{display:inline-flex; border:2px solid var(--blue-section); border-radius:999px; overflow:hidden;}
+  .track-toggle button{
+    border:none; background:#fff; color:var(--blue-section); font-family:inherit;
+    font-size:.9rem; font-weight:700; padding:7px 20px; cursor:pointer; transition:all .15s;
+  }
+  .track-toggle button.active{background:var(--blue-section); color:#fff;}
+  .tool-sep{flex:1;}
+  .mini-btn{
+    border:1.5px solid #cbd5e1; background:#fff; color:#475569; font-family:inherit;
+    font-size:.82rem; font-weight:600; padding:6px 14px; border-radius:8px; cursor:pointer; transition:all .15s;
+  }
+  .mini-btn:hover{background:#f1f5f9;}
+  .src-ind{font-size:.72rem; font-weight:600; padding:4px 10px; border-radius:999px; white-space:nowrap;}
+  .src-ind.ext{background:#d1fae5; color:#065f46;}
+  .src-ind.emb{background:#fef3c7; color:#92400e;}
+
+  .legend{font-size:.74rem; color:var(--muted); margin:0 4px 14px; display:flex; gap:14px; flex-wrap:wrap;}
+  .legend b{color:#374151;}
+
+  /* Phase */
+  .phase{background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-bottom:12px; overflow:hidden;}
+  .phase-head{display:flex; align-items:center; gap:10px; padding:15px 16px; cursor:pointer; user-select:none; transition:background .12s;}
+  .phase-head:hover{background:#f8fafc;}
+  .phase-num{
+    flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--blue-header); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem;
+  }
+  .phase-title{flex:1; font-size:1.05rem; font-weight:700;}
+  .owner{font-size:.76rem; color:var(--muted); white-space:nowrap;}
+  .chev{font-size:.9rem; color:#94a3b8; transition:transform .2s; flex-shrink:0;}
+  .phase.open > .phase-head .chev{transform:rotate(180deg);}
+  .phase-body{display:none; padding:0 16px 14px;}
+  .phase.open > .phase-body{display:block;}
+
+  /* Step */
+  .step{border:1px solid var(--line); border-radius:10px; margin-top:10px; overflow:hidden;}
+  .step-head{display:flex; align-items:center; gap:8px; padding:11px 13px; cursor:pointer; user-select:none; background:#f8fafc; transition:background .12s;}
+  .step-head:hover{background:#eef2f7;}
+  .step-title{flex:1; font-size:.94rem; font-weight:600;}
+  .step.open > .step-head .chev{transform:rotate(180deg);}
+  .step-body{display:none; padding:12px 14px;}
+  .step.open > .step-body{display:block;}
+  .step-meta{margin-bottom:8px;}
+  .deps{font-size:.78rem; color:var(--muted); margin-bottom:8px;}
+  .deps::before{content:'↳ '; color:#94a3b8;}
+
+  /* Notes */
+  .note{font-size:.82rem; color:#374151; background:#f9fafb; border-inline-start:3px solid var(--blue-section); border-radius:0 6px 6px 0; padding:9px 12px; margin:8px 0;}
+  .note.timing{background:#fff7ed; border-inline-start-color:#f59e0b; color:#7c2d12;}
+
+  /* Docs */
+  .docs{margin-top:4px;}
+  .doc{padding:10px 2px; border-bottom:1px dashed #e5e7eb;}
+  .doc:last-child{border-bottom:none;}
+  .doc-main{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .doc-label{flex:1 1 240px; font-size:.88rem; font-weight:500;}
+  .doc-chips{display:flex; gap:6px; flex-wrap:wrap;}
+  .src{font-size:.7rem; color:#9ca3af; margin-top:5px; font-family:'Consolas',monospace;}
+  .empty{font-size:.82rem; color:#9ca3af; padding:8px 2px;}
+
+  /* Chips */
+  .chip{font-size:.71rem; padding:3px 9px; border-radius:999px; font-weight:600; white-space:nowrap; line-height:1.4;}
+  .chip.p-inv{background:#ddebf7; color:#1e40af;}
+  .chip.p-yossi{background:#d1fae5; color:#065f46;}
+  .chip.p-pm{background:#ede9fe; color:#5b21b6;}
+  .chip.p-title{background:#e2e8f0; color:#334155;}
+  .chip.p-builder{background:#ccfbf1; color:#115e59;}
+  .chip.p-cpa{background:#fef3c7; color:#92400e;}
+  .chip.p-def{background:#f1f5f9; color:#475569;}
+  .chip.req{background:#fee2e2; color:#991b1b;}
+  .chip.opt{background:#f1f5f9; color:#64748b;}
+  .chip.up{background:#dbeafe; color:#1d4ed8;}
+  .chip.fin{background:#ffedd5; color:#9a3412;}
+  .chip.doc-count{background:#eef2ff; color:#3730a3;}
+  .chip.doc-count.muted{background:#f1f5f9; color:#94a3b8;}
+
+  /* About */
+  .about{background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-top:8px; overflow:hidden;}
+  .about-head{display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer; user-select:none; font-weight:700; color:var(--blue-header);}
+  .about-head:hover{background:#f8fafc;}
+  .about.open > .about-head .chev{transform:rotate(180deg);}
+  .about-body{display:none; padding:0 18px 16px;}
+  .about.open > .about-body{display:block;}
+  .about-body h4{font-size:.85rem; color:var(--blue-section); margin:12px 0 6px;}
+  .about-body ul{padding-inline-start:20px; font-size:.82rem; color:#374151;}
+  .about-body ul li{margin-bottom:5px;}
+  .about-body ul.open li{color:#9a3412;}
+
+  /* Cash mode: hide financed-only items */
+  body.mode-cash [data-track="financed"]{display:none !important;}
+
+  footer{text-align:center; font-size:.72rem; color:#9ca3af; padding:18px 0 6px;}
+
+  @media (max-width:600px){
+    body{padding:10px;}
+    header{padding:18px 16px;}
+    header h1{font-size:1.25rem;}
+    .phase-title{font-size:.98rem;}
+    .toolbar{padding:10px 12px; gap:8px;}
+    .track-toggle button{padding:6px 16px;}
+    .owner{display:none;}
+    .phase.open .owner{display:inline; font-size:.72rem;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>התהליך המלא — משקיע ארה״ב</h1>
+    <div class="sub" id="subline">טוען…</div>
+  </header>
+
+  <div class="toolbar">
+    <div class="track-toggle">
+      <button data-mode="financed" class="active">מימון</button>
+      <button data-mode="cash">מזומן</button>
+    </div>
+    <button class="mini-btn" onclick="setAll(true)">הרחב הכל</button>
+    <button class="mini-btn" onclick="setAll(false)">כווץ הכל</button>
+    <span class="tool-sep"></span>
+    <span class="src-ind emb" id="src-ind">…</span>
+  </div>
+
+  <div class="legend">
+    <span><b>צ׳יפים:</b></span>
+    <span>מי מספק (משקיע / יוסי / מנהל נכס…)</span>
+    <span><b>חובה</b> / רשות</span>
+    <span><b>⬆ העלאה</b> = מסמך שייקלט במערכת העתידית</span>
+    <span><b>מימון</b> = רק במסלול מימון</span>
+  </div>
+
+  <div id="phases"></div>
+
+  <div class="about">
+    <div class="about-head">
+      <span style="flex:1;">אודות והערות פתוחות</span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="about-body" id="about-body"></div>
+  </div>
+
+  <footer>כלי פנימי · נקרא מ-<code>full-process.json</code> · v1</footer>
+</div>
+
+<!-- ===== FALLBACK SNAPSHOT =====
+     מקור-האמת הוא full-process.json החיצוני (נטען ב-fetch).
+     ה-JSON למטה הוא snapshot לגיבוי בלבד, כדי שהקובץ יעבוד גם בפתיחה מקומית (file://).
+     אם משנים את full-process.json — לרענן גם את ה-snapshot הזה. -->
+<script type="application/json" id="embedded-data">
+{
+  "meta": {
+    "title": "Full Investor Process — US (Financed track)",
+    "version": "0.1-draft",
+    "owner": "Yossi",
+    "purpose": "Source-of-truth for ordered investor pipeline; basis for future UI + document-upload system.",
+    "tracks": ["financed", "cash"],
+    "doc_status_values": ["not_started", "requested", "received", "submitted", "approved", "na"],
+    "versions_note": "Several list versions existed across clients. This is the accessible BASE version to work from."
+  },
+  "phases": [
+    {
+      "id": "p1_onboarding",
+      "title": "Onboarding",
+      "owner": "Yossi",
+      "track": "both",
+      "steps": [
+        {
+          "id": "p1_go",
+          "title": "GO — close investor & minimal intake",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": [],
+          "documents": [
+            { "id": "passport", "label": "Passport scan — each partner (2+)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "il_address_en", "label": "Israel residential address (English)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "llc_names", "label": "3 LLC name suggestions (generic)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "full_names_phones", "label": "Full names + mobile phones", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ]
+        },
+        {
+          "id": "p1_llc_ein",
+          "title": "Form LLC + EIN",
+          "owner": "Yossi+CPA",
+          "track": "both",
+          "depends_on": ["p1_go"],
+          "documents": [
+            { "id": "ss4", "label": "SS4 form (signed, returned to CPA)", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
+            { "id": "ein_letter", "label": "EIN issuance letter (IRS)", "provided_by": "yossi", "track": "both", "required": true, "upload": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p1b_bank",
+      "title": "US Bank account (Mercury)",
+      "owner": "Yossi+investor",
+      "track": "both",
+      "steps": [
+        {
+          "id": "p1b_open",
+          "title": "Open Mercury account (Meet ~20min)",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p1_llc_ein"],
+          "documents": [
+            { "id": "passport_uncropped", "label": "Passport photo uncropped (taken live)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "il_address_proof", "label": "Israel address verification scan (arnona/electric/water)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "personal_emails", "label": "Personal emails of each partner", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ]
+        },
+        {
+          "id": "p1b_fund",
+          "title": "Fund account (test transfer then large)",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p1b_open"],
+          "documents": [
+            { "id": "il_tax_declaration", "label": "Israel Tax Authority declaration — internal tool; given to the client's Israeli banker to enable the transfer", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
+            { "id": "test_transfer", "label": "Small test transfer then large transfers", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ],
+          "notes": "IL bank -> Mercury defined as 'transfer to foreign account / same legal entity' to avoid VAT/tax on the transfer."
+        }
+      ]
+    },
+    {
+      "id": "p2_property",
+      "title": "Property selection & contract",
+      "owner": "Builder/Yossi+investor",
+      "track": "both",
+      "steps": [
+        {
+          "id": "p2_find",
+          "title": "Find property, negotiate with builder, present option; investor approves",
+          "owner": "builder",
+          "track": "both",
+          "depends_on": ["p1_go"],
+          "documents": []
+        },
+        {
+          "id": "p2_funds_ready",
+          "title": "Funds ready for earnest",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p1b_fund"],
+          "documents": [
+            { "id": "funds_ready", "label": "Earnest funds available (IL or US)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ]
+        },
+        {
+          "id": "p2_pof",
+          "title": "Proof of funds (POF)",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p1b_fund"],
+          "documents": [
+            { "id": "pof", "label": "Bank balance page showing amount (English preferred)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+          ]
+        },
+        {
+          "id": "p2_contract",
+          "title": "Sign contract + earnest deposit",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p2_find", "p2_funds_ready"],
+          "documents": [
+            { "id": "purchase_agreement", "label": "Builder purchase agreement — both sign, send signed copy to Yossi", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "earnest_payment", "label": "Earnest money via builder link / Mercury", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "rep_agreement", "label": "Representation Agreement — both sign", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p3_pm",
+      "title": "Property Manager intro & pre-closing",
+      "owner": "pm",
+      "track": "both",
+      "steps": [
+        {
+          "id": "p3_intro",
+          "title": "PM intro; forward all property emails",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p2_contract"],
+          "documents": [
+            { "id": "forward_emails", "label": "Forward all property emails (~8-9) to the property manager", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ]
+        },
+        {
+          "id": "p3_invoice",
+          "title": "PM invoice (closing + home prep)",
+          "owner": "pm",
+          "track": "both",
+          "depends_on": ["p3_intro"],
+          "documents": [
+            { "id": "pm_invoice", "label": "Invoice: inspection, appraisal, blinds+garage opener, service fee, LLC/CPA, utility deposits", "provided_by": "pm", "track": "both", "required": true, "upload": true }
+          ],
+          "notes": "Ongoing management 8% of rent, starts after tenant moves in."
+        }
+      ]
+    },
+    {
+      "id": "p4_loan",
+      "title": "Loan documents (lender clear-to-close)",
+      "owner": "Yossi+investor",
+      "track": "financed",
+      "timing": "Starts ONLY after contract signed + earnest paid. Do not send loan paperwork earlier (avoid scaring the client).",
+      "steps": [
+        {
+          "id": "p4_stability",
+          "title": "Stability questions for finance company",
+          "owner": "investor",
+          "track": "financed",
+          "depends_on": ["p2_contract"],
+          "documents": [
+            { "id": "stability_q", "label": "Years at address / owner-or-renter / married-status", "provided_by": "investor", "track": "financed", "required": true, "upload": false }
+          ]
+        },
+        {
+          "id": "p4_clear_to_close",
+          "title": "Clear-to-close package (5 conditions)",
+          "owner": "investor",
+          "track": "financed",
+          "depends_on": ["p1_llc_ein", "p1b_fund", "p2_contract"],
+          "documents": [
+            { "id": "operating_agreement", "label": "Operating Agreement for the LLC", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
+            { "id": "ein_letter_loan", "label": "EIN issuance letter (IRS)", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
+            { "id": "mercury_2mo", "label": "2 months Mercury bank statements", "provided_by": "investor", "track": "financed", "required": true, "upload": true },
+            { "id": "earnest_txn_history", "label": "Transaction history showing earnest payment (if not in statements)", "provided_by": "investor", "track": "financed", "required": false, "upload": true },
+            { "id": "credit_worthiness", "label": "Credit worthiness — one of: intl credit report / credit reference letter / IL bank statements 60 days back", "provided_by": "investor", "track": "financed", "required": true, "upload": true }
+          ],
+          "notes": "Translation flag: any non-English doc needs professional English translation."
+        }
+      ]
+    },
+    {
+      "id": "p5_closing",
+      "title": "Signing & closing",
+      "owner": "title/escrow",
+      "track": "both",
+      "steps": [
+        {
+          "id": "p5_sign_wire",
+          "title": "Sign in portal; wire the balance; close",
+          "owner": "investor",
+          "track": "both",
+          "depends_on": ["p4_clear_to_close", "p3_invoice"],
+          "documents": [
+            { "id": "closing_docs", "label": "All signing docs in title/escrow portal", "provided_by": "title", "track": "both", "required": true, "upload": false },
+            { "id": "balance_wire", "label": "Wire the balance (wire instructions in portal)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+          ]
+        }
+      ]
+    }
+  ],
+  "resolved": [
+    "'Tax document' = Israel Tax Authority declaration (internal tool), not US. Placed in p1b_fund.",
+    "Loan phase starts only after contract signed + earnest paid. Set as p4_loan.timing.",
+    "Cash track skips only p4_loan (financing). Everything else identical."
+  ],
+  "open_items": [
+    "Full parallel-vs-serial mapping: confirm which steps can run concurrently (e.g. account funding during property search) vs strict dependencies — needs Yossi's pass over the order."
+  ]
+}
+</script>
+
+<script>
+  let DATA = null;
+  let mode = 'financed';
+  let stepTitleById = {};
+
+  const PROVIDERS = {
+    investor:{he:'משקיע', cls:'p-inv'},
+    yossi:{he:'יוסי', cls:'p-yossi'},
+    pm:{he:'מנהל נכס', cls:'p-pm'},
+    title:{he:'Title/Escrow', cls:'p-title'},
+    builder:{he:'קבלן', cls:'p-builder'},
+    cpa:{he:'CPA', cls:'p-cpa'}
+  };
+  const OWNER_HE = { investor:'משקיע', yossi:'יוסי', builder:'קבלן', pm:'מנהל נכס', title:'Title', 'title/escrow':'Title/Escrow', cpa:'CPA' };
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function provChip(k){ const p=PROVIDERS[k]||{he:esc(k||'—'),cls:'p-def'}; return `<span class="chip ${p.cls}">${esc(p.he)}</span>`; }
+  function ownerLabel(o){ if(!o) return ''; return OWNER_HE[o.toLowerCase()] || o; }
+  function depsLabel(d){ if(!d||!d.length) return ''; return d.map(id=>stepTitleById[id]||id).join(' · '); }
+  function docCountLabel(c){ return c===1 ? 'מסמך אחד' : (c+' מסמכים'); }
+
+  function docHTML(d){
+    const fin = d.track==='financed';
+    const chips = [
+      provChip(d.provided_by),
+      d.required ? '<span class="chip req">חובה</span>' : '<span class="chip opt">רשות</span>',
+      d.upload ? '<span class="chip up">⬆ העלאה</span>' : '',
+      fin ? '<span class="chip fin">מימון</span>' : ''
+    ].filter(Boolean).join('');
+    const src = d.source ? `<div class="src">מקור: ${esc(d.source)}</div>` : '';
+    return `<div class="doc" data-track="${esc(d.track)}">
+      <div class="doc-main"><span class="doc-label">${esc(d.label)}</span><span class="doc-chips">${chips}</span></div>
+      ${src}
+    </div>`;
+  }
+
+  function stepHTML(s){
+    const finChip = s.track==='financed' ? '<span class="chip fin">מימון</span>' : '';
+    const owner = s.owner ? `<span class="owner">אחראי: ${esc(ownerLabel(s.owner))}</span>` : '';
+    const docs = s.documents || [];
+    const total = docs.length;
+    const finDocs = docs.filter(d=>d.track==='financed').length;
+    const cnt = total
+      ? `<span class="chip doc-count" data-count-financed="${total}" data-count-cash="${total-finDocs}">${docCountLabel(total)}</span>`
+      : `<span class="chip doc-count muted">ללא מסמכים</span>`;
+    const deps = depsLabel(s.depends_on);
+    const depsLine = deps ? `<div class="deps">תלוי ב: ${esc(deps)}</div>` : '';
+    const notes = s.notes ? `<div class="note">📝 ${esc(s.notes)}</div>` : '';
+    const docsHTML = total ? docs.map(docHTML).join('') : '<div class="empty">— אין מסמכים בשלב זה —</div>';
+    return `<div class="step" data-track="${esc(s.track)}">
+      <div class="step-head"><span class="step-title">${esc(s.title)}</span>${finChip}${cnt}<span class="chev">▾</span></div>
+      <div class="step-body">
+        <div class="step-meta">${owner}</div>
+        ${depsLine}${notes}
+        <div class="docs">${docsHTML}</div>
+      </div>
+    </div>`;
+  }
+
+  function phaseHTML(p){
+    const finChip = p.track==='financed' ? '<span class="chip fin">מסלול מימון</span>' : '';
+    const owner = p.owner ? `<span class="owner">אחראי: ${esc(ownerLabel(p.owner))}</span>` : '';
+    const timing = p.timing ? `<div class="note timing">⏱ <b>תזמון:</b> ${esc(p.timing)}</div>` : '';
+    const steps = (p.steps||[]).map(stepHTML).join('');
+    return `<div class="phase" data-track="${esc(p.track)}">
+      <div class="phase-head">
+        <span class="phase-num"></span>
+        <span class="phase-title">${esc(p.title)}</span>
+        ${finChip}${owner}
+        <span class="chev">▾</span>
+      </div>
+      <div class="phase-body">${timing}${steps}</div>
+    </div>`;
+  }
+
+  function renderAbout(){
+    const m = DATA.meta||{};
+    const resolved = (DATA.resolved||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+    const open = (DATA.open_items||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+    document.getElementById('about-body').innerHTML =
+      (m.versions_note?`<div class="note">ℹ️ ${esc(m.versions_note)}</div>`:'') +
+      (resolved?`<h4>הוכרע (resolved)</h4><ul>${resolved}</ul>`:'') +
+      (open?`<h4>פתוח (open items)</h4><ul class="open">${open}</ul>`:'');
+  }
+
+  function render(){
+    stepTitleById = {};
+    DATA.phases.forEach(p=>(p.steps||[]).forEach(s=>{ stepTitleById[s.id]=s.title; }));
+    document.getElementById('phases').innerHTML = DATA.phases.map(phaseHTML).join('');
+    const m = DATA.meta||{};
+    document.getElementById('subline').textContent =
+      `גרסה ${m.version||'—'} · מסלול מימון מציג הכל · מזומן מדלג על שלב ההלוואה`;
+    renderAbout();
+    applyTrack();
+  }
+
+  function applyTrack(){
+    const cash = mode==='cash';
+    document.body.classList.toggle('mode-cash', cash);
+    let n=0;
+    document.querySelectorAll('#phases .phase').forEach(ph=>{
+      if(cash && ph.dataset.track==='financed') return;
+      n++;
+      const b=ph.querySelector('.phase-num'); if(b) b.textContent=n;
+    });
+    document.querySelectorAll('#phases .doc-count').forEach(b=>{
+      if(b.classList.contains('muted')) return;
+      const c = cash ? +b.dataset.countCash : +b.dataset.countFinanced;
+      b.textContent = docCountLabel(c);
+    });
+  }
+
+  function setAll(open){
+    document.querySelectorAll('#phases .phase, #phases .step').forEach(el=>el.classList.toggle('open', open));
+  }
+
+  function setSource(kind){
+    const el=document.getElementById('src-ind');
+    if(kind==='external'){ el.textContent='נטען מ-full-process.json'; el.className='src-ind ext'; }
+    else { el.textContent='snapshot מוטמע'; el.className='src-ind emb'; }
+  }
+
+  // Accordion (event delegation)
+  document.addEventListener('click', e=>{
+    const ph=e.target.closest('.phase-head'); if(ph){ ph.parentElement.classList.toggle('open'); return; }
+    const st=e.target.closest('.step-head'); if(st){ st.parentElement.classList.toggle('open'); return; }
+    const ab=e.target.closest('.about-head'); if(ab){ ab.parentElement.classList.toggle('open'); return; }
+  });
+
+  // Track toggle
+  document.querySelectorAll('.track-toggle button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      mode=b.dataset.mode;
+      document.querySelectorAll('.track-toggle button').forEach(x=>x.classList.toggle('active', x===b));
+      applyTrack();
+    });
+  });
+
+  async function load(){
+    try{
+      const res = await fetch('./full-process.json', {cache:'no-store'});
+      if(!res.ok) throw new Error('http '+res.status);
+      DATA = await res.json();
+      setSource('external');
+    }catch(e){
+      DATA = JSON.parse(document.getElementById('embedded-data').textContent);
+      setSource('embedded');
+    }
+    render();
+  }
+  load();
+</script>
+</body>
+</html>
