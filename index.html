@@ -110,7 +110,7 @@
     <span class="src-ind emb" id="src-ind">…</span>
   </div>
 
-  <div class="legend">מימון = שלב או מסמך רק במסלול מימון · להעלאה = מסמך שייקלט במערכת העתידית</div>
+  <div class="legend">מימון = פאזה/שלב במסלול מימון בלבד</div>
 
   <div id="phases"></div>
 
@@ -190,7 +190,7 @@
           "depends_on": ["p1_llc_ein"],
           "documents": [
             { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך (מצולם בשידור חי בפגישה)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים, או ספח תעודת זהות עם הכתובת)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
           ],
           "notes": "מה שכבר בידינו מהשלבים הקודמים (תנאי לפתיחת הבנק): מיילים אישיים של כל שותף (נאספו באונבורדינג), כתובת רשומה בארה״ב (מה-LLC), ומכתב EIN סרוק השמור בתיקייה — בלעדיו לא היינו מתחילים תהליך בנק."
         },
@@ -383,11 +383,9 @@
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   function ownerLabel(o){ if(!o) return ''; return OWNER_HE[o.toLowerCase()] || o; }
   function depsLabel(d){ if(!d||!d.length) return ''; return d.map(id=>stepTitleById[id]||id).join(' · '); }
-  function tagsHTML(d){ const t=[]; if(d.upload) t.push('<span class="tag">להעלאה</span>'); if(d.track==='financed') t.push('<span class="tag">מימון</span>'); return t.join(''); }
-
   function docHTML(d){
     const src = d.source ? `<div class="src">מקור: ${esc(d.source)}</div>` : '';
-    return `<li class="doc" data-track="${esc(d.track)}"><span class="doc-label">${esc(d.label)}</span>${tagsHTML(d)}${src}</li>`;
+    return `<li class="doc" data-track="${esc(d.track)}"><span class="doc-label">${esc(d.label)}</span>${src}</li>`;
   }
 
   function stepHTML(s){

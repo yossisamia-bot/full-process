@@ -58,7 +58,7 @@
           "depends_on": ["p1_llc_ein"],
           "documents": [
             { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך (מצולם בשידור חי בפגישה)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים, או ספח תעודת זהות עם הכתובת)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
           ],
           "notes": "מה שכבר בידינו מהשלבים הקודמים (תנאי לפתיחת הבנק): מיילים אישיים של כל שותף (נאספו באונבורדינג), כתובת רשומה בארה״ב (מה-LLC), ומכתב EIN סרוק השמור בתיקייה — בלעדיו לא היינו מתחילים תהליך בנק."
         },
