@@ -6,129 +6,89 @@
 <title>התהליך המלא — משקיע ארה״ב</title>
 <style>
   :root{
-    --blue-header:#2f5496; --blue-section:#4472c4;
-    --bg:#eef2f7; --card:#ffffff; --text:#1a1a2e; --muted:#6b7280;
-    --line:#e2e8f0;
+    --ink:#1f2328; --muted:#6b7280; --faint:#9aa0a6;
+    --line:#d6dade; --line-soft:#ededed; --bg:#ffffff; --accent:#384150;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); padding:16px; line-height:1.5;}
-  .wrap{max-width:840px; margin:0 auto;}
+  body{font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--ink); padding:22px 16px; line-height:1.55; font-size:15px;}
+  .wrap{max-width:760px; margin:0 auto;}
 
-  header{
-    background:linear-gradient(135deg,#2f5496,#4472c4); color:#fff;
-    border-radius:14px; padding:22px 24px; box-shadow:0 4px 18px rgba(0,0,0,.12);
-  }
-  header h1{font-size:1.5rem; font-weight:700; letter-spacing:-.3px;}
-  header .sub{font-size:.85rem; opacity:.9; margin-top:6px;}
+  header{padding:2px 2px 12px; border-bottom:2px solid var(--ink);}
+  header h1{font-size:1.2rem; font-weight:700; letter-spacing:-.2px;}
+  header .sub{font-size:.76rem; color:var(--muted); margin-top:4px;}
 
   /* Toolbar */
-  .toolbar{
-    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-    background:var(--card); border-radius:12px; padding:12px 16px; margin:14px 0;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);
-  }
-  .track-toggle{display:inline-flex; border:2px solid var(--blue-section); border-radius:999px; overflow:hidden;}
-  .track-toggle button{
-    border:none; background:#fff; color:var(--blue-section); font-family:inherit;
-    font-size:.9rem; font-weight:700; padding:7px 20px; cursor:pointer; transition:all .15s;
-  }
-  .track-toggle button.active{background:var(--blue-section); color:#fff;}
+  .toolbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--line-soft);}
+  .track-toggle{display:inline-flex; border:1px solid var(--accent); border-radius:4px; overflow:hidden;}
+  .track-toggle button{border:none; background:#fff; color:var(--accent); font-family:inherit; font-size:.82rem; font-weight:600; padding:5px 16px; cursor:pointer;}
+  .track-toggle button.active{background:var(--accent); color:#fff;}
   .tool-sep{flex:1;}
-  .mini-btn{
-    border:1.5px solid #cbd5e1; background:#fff; color:#475569; font-family:inherit;
-    font-size:.82rem; font-weight:600; padding:6px 14px; border-radius:8px; cursor:pointer; transition:all .15s;
-  }
-  .mini-btn:hover{background:#f1f5f9;}
-  .src-ind{font-size:.72rem; font-weight:600; padding:4px 10px; border-radius:999px; white-space:nowrap;}
-  .src-ind.ext{background:#d1fae5; color:#065f46;}
-  .src-ind.emb{background:#fef3c7; color:#92400e;}
+  .mini-btn{border:1px solid var(--line); background:#fff; color:var(--muted); font-family:inherit; font-size:.78rem; font-weight:500; padding:5px 12px; border-radius:4px; cursor:pointer;}
+  .mini-btn:hover{background:#f5f6f7;}
+  .src-ind{font-size:.7rem; color:var(--faint); white-space:nowrap;}
 
-  .legend{font-size:.74rem; color:var(--muted); margin:0 4px 14px; display:flex; gap:14px; flex-wrap:wrap;}
-  .legend b{color:#374151;}
+  .legend{font-size:.72rem; color:var(--faint); padding:9px 2px 2px;}
 
-  /* Phase */
-  .phase{background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-bottom:12px; overflow:hidden;}
-  .phase-head{display:flex; align-items:center; gap:10px; padding:15px 16px; cursor:pointer; user-select:none; transition:background .12s;}
-  .phase-head:hover{background:#f8fafc;}
-  .phase-num{
-    flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--blue-header); color:#fff;
-    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem;
-  }
-  .phase-title{flex:1; font-size:1.05rem; font-weight:700;}
-  .owner{font-size:.76rem; color:var(--muted); white-space:nowrap;}
-  .chev{font-size:.9rem; color:#94a3b8; transition:transform .2s; flex-shrink:0;}
-  .phase.open > .phase-head .chev{transform:rotate(180deg);}
-  .phase-body{display:none; padding:0 16px 14px;}
+  /* Marker (+/−) — replaces all chevrons/circles */
+  .marker{flex-shrink:0; width:1em; text-align:center; color:var(--faint); font-weight:600; line-height:1;}
+  .marker::before{content:'+';}
+  .phase.open > .phase-head .marker::before,
+  .step.open > .step-head .marker::before,
+  .about.open > .about-head .marker::before{content:'\2212';}
+
+  /* Phase — dry outline row */
+  .phase{border-bottom:1px solid var(--line);}
+  .phase-head{display:flex; align-items:baseline; gap:8px; padding:12px 2px; cursor:pointer; user-select:none;}
+  .phase-num{flex-shrink:0; min-width:1.5em; color:var(--muted); font-weight:700; font-variant-numeric:tabular-nums;}
+  .phase-title{flex:1; font-size:1rem; font-weight:600;}
+  .phase-body{display:none; padding:0 0 8px;}
   .phase.open > .phase-body{display:block;}
 
-  /* Step */
-  .step{border:1px solid var(--line); border-radius:10px; margin-top:10px; overflow:hidden;}
-  .step-head{display:flex; align-items:center; gap:8px; padding:11px 13px; cursor:pointer; user-select:none; background:#f8fafc; transition:background .12s;}
-  .step-head:hover{background:#eef2f7;}
-  .step-title{flex:1; font-size:.94rem; font-weight:600;}
-  .step.open > .step-head .chev{transform:rotate(180deg);}
-  .step-body{display:none; padding:12px 14px;}
+  /* Step — nested list inside an open phase */
+  .step{border-top:1px solid var(--line-soft);}
+  .step-head{display:flex; align-items:baseline; gap:8px; padding:9px 0; padding-inline-start:1.8em; cursor:pointer; user-select:none;}
+  .step-title{flex:1; font-size:.9rem; font-weight:500;}
+  .step-body{display:none; padding:2px 0 12px; padding-inline-start:2.6em;}
   .step.open > .step-body{display:block;}
-  .step-meta{margin-bottom:8px;}
-  .deps{font-size:.78rem; color:var(--muted); margin-bottom:8px;}
-  .deps::before{content:'↳ '; color:#94a3b8;}
 
-  /* Notes */
-  .note{font-size:.82rem; color:#374151; background:#f9fafb; border-inline-start:3px solid var(--blue-section); border-radius:0 6px 6px 0; padding:9px 12px; margin:8px 0;}
-  .note.timing{background:#fff7ed; border-inline-start-color:#f59e0b; color:#7c2d12;}
+  .meta-line{font-size:.8rem; color:var(--muted); margin:2px 0;}
+  .meta-line b{color:var(--ink); font-weight:600;}
+  .deps{font-size:.78rem; color:var(--muted); margin:2px 0;}
 
-  /* Docs */
-  .docs{margin-top:4px;}
-  .doc{padding:10px 2px; border-bottom:1px dashed #e5e7eb;}
-  .doc:last-child{border-bottom:none;}
-  .doc-main{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
-  .doc-label{flex:1 1 240px; font-size:.88rem; font-weight:500;}
-  .doc-chips{display:flex; gap:6px; flex-wrap:wrap;}
-  .src{font-size:.7rem; color:#9ca3af; margin-top:5px; font-family:'Consolas',monospace;}
-  .empty{font-size:.82rem; color:#9ca3af; padding:8px 2px;}
+  /* Tags — muted inline text, not pills */
+  .tag{font-size:.72rem; color:var(--faint); white-space:nowrap;}
+  .tag::before{content:'· '; color:var(--line);}
 
-  /* Chips */
-  .chip{font-size:.71rem; padding:3px 9px; border-radius:999px; font-weight:600; white-space:nowrap; line-height:1.4;}
-  .chip.p-inv{background:#ddebf7; color:#1e40af;}
-  .chip.p-yossi{background:#d1fae5; color:#065f46;}
-  .chip.p-pm{background:#ede9fe; color:#5b21b6;}
-  .chip.p-title{background:#e2e8f0; color:#334155;}
-  .chip.p-builder{background:#ccfbf1; color:#115e59;}
-  .chip.p-cpa{background:#fef3c7; color:#92400e;}
-  .chip.p-def{background:#f1f5f9; color:#475569;}
-  .chip.req{background:#fee2e2; color:#991b1b;}
-  .chip.opt{background:#f1f5f9; color:#64748b;}
-  .chip.up{background:#dbeafe; color:#1d4ed8;}
-  .chip.fin{background:#ffedd5; color:#9a3412;}
-  .chip.doc-count{background:#eef2ff; color:#3730a3;}
-  .chip.doc-count.muted{background:#f1f5f9; color:#94a3b8;}
+  /* Docs — plain ordered list, appears only inside an open step */
+  ol.docs{list-style:none; margin:7px 0 0; padding:0;}
+  .doc{padding:5px 0; border-top:1px dotted var(--line-soft); font-size:.84rem;}
+  .doc:first-child{border-top:none;}
+  .doc-label{color:var(--ink);}
+  .src{font-size:.68rem; color:var(--faint); margin-top:2px; font-family:'Consolas',monospace;}
+  .empty{font-size:.8rem; color:var(--faint); padding:5px 0;}
+
+  /* Notes — plain start-border quote */
+  .note{font-size:.8rem; color:var(--muted); border-inline-start:2px solid var(--line); padding-inline-start:10px; margin:9px 0 0;}
 
   /* About */
-  .about{background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-top:8px; overflow:hidden;}
-  .about-head{display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer; user-select:none; font-weight:700; color:var(--blue-header);}
-  .about-head:hover{background:#f8fafc;}
-  .about.open > .about-head .chev{transform:rotate(180deg);}
-  .about-body{display:none; padding:0 18px 16px;}
+  .about{margin-top:20px; border-top:2px solid var(--ink);}
+  .about-head{display:flex; align-items:baseline; gap:8px; padding:12px 2px; cursor:pointer; user-select:none; font-weight:600;}
+  .about-body{display:none; padding:0 2px 14px;}
   .about.open > .about-body{display:block;}
-  .about-body h4{font-size:.85rem; color:var(--blue-section); margin:12px 0 6px;}
-  .about-body ul{padding-inline-start:20px; font-size:.82rem; color:#374151;}
-  .about-body ul li{margin-bottom:5px;}
-  .about-body ul.open li{color:#9a3412;}
+  .about-body h4{font-size:.82rem; color:var(--muted); margin:14px 0 4px; font-weight:700;}
+  .about-body ul{padding-inline-start:18px; font-size:.8rem; color:var(--muted);}
+  .about-body ul li{margin-bottom:4px;}
 
   /* Cash mode: hide financed-only items */
   body.mode-cash [data-track="financed"]{display:none !important;}
 
-  footer{text-align:center; font-size:.72rem; color:#9ca3af; padding:18px 0 6px;}
+  footer{text-align:center; font-size:.7rem; color:var(--faint); padding:22px 0 6px; margin-top:8px; border-top:1px solid var(--line-soft);}
 
   @media (max-width:600px){
-    body{padding:10px;}
-    header{padding:18px 16px;}
-    header h1{font-size:1.25rem;}
-    .phase-title{font-size:.98rem;}
-    .toolbar{padding:10px 12px; gap:8px;}
-    .track-toggle button{padding:6px 16px;}
-    .owner{display:none;}
-    .phase.open .owner{display:inline; font-size:.72rem;}
+    body{padding:14px 12px; font-size:14px;}
+    header h1{font-size:1.08rem;}
+    .step-head{padding-inline-start:1.4em;}
+    .step-body{padding-inline-start:2em;}
   }
 </style>
 </head>
@@ -150,18 +110,14 @@
     <span class="src-ind emb" id="src-ind">…</span>
   </div>
 
-  <div class="legend">
-    <span><b>צ׳יפים:</b></span>
-    <span><b>⬆ העלאה</b> = מסמך שייקלט במערכת העתידית</span>
-    <span><b>מימון</b> = רק במסלול מימון</span>
-  </div>
+  <div class="legend">מימון = שלב או מסמך רק במסלול מימון · להעלאה = מסמך שייקלט במערכת העתידית</div>
 
   <div id="phases"></div>
 
   <div class="about">
     <div class="about-head">
       <span style="flex:1;">אודות והערות פתוחות</span>
-      <span class="chev">▾</span>
+      <span class="marker"></span>
     </div>
     <div class="about-body" id="about-body"></div>
   </div>
@@ -422,69 +378,42 @@
   let mode = 'financed';
   let stepTitleById = {};
 
-  const PROVIDERS = {
-    investor:{he:'משקיע', cls:'p-inv'},
-    yossi:{he:'יוסי', cls:'p-yossi'},
-    pm:{he:'מנהל נכס', cls:'p-pm'},
-    title:{he:'Title/Escrow', cls:'p-title'},
-    builder:{he:'קבלן', cls:'p-builder'},
-    cpa:{he:'CPA', cls:'p-cpa'}
-  };
   const OWNER_HE = { investor:'משקיע', yossi:'יוסי', builder:'קבלן', pm:'מנהל נכס', title:'Title', 'title/escrow':'Title/Escrow', cpa:'CPA' };
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  function provChip(k){ const p=PROVIDERS[k]||{he:esc(k||'—'),cls:'p-def'}; return `<span class="chip ${p.cls}">${esc(p.he)}</span>`; }
   function ownerLabel(o){ if(!o) return ''; return OWNER_HE[o.toLowerCase()] || o; }
   function depsLabel(d){ if(!d||!d.length) return ''; return d.map(id=>stepTitleById[id]||id).join(' · '); }
-  function docCountLabel(c){ return c===1 ? 'מסמך אחד' : (c+' מסמכים'); }
+  function tagsHTML(d){ const t=[]; if(d.upload) t.push('<span class="tag">להעלאה</span>'); if(d.track==='financed') t.push('<span class="tag">מימון</span>'); return t.join(''); }
 
   function docHTML(d){
-    const fin = d.track==='financed';
-    const chips = [
-      d.upload ? '<span class="chip up">⬆ העלאה</span>' : '',
-      fin ? '<span class="chip fin">מימון</span>' : ''
-    ].filter(Boolean).join('');
     const src = d.source ? `<div class="src">מקור: ${esc(d.source)}</div>` : '';
-    return `<div class="doc" data-track="${esc(d.track)}">
-      <div class="doc-main"><span class="doc-label">${esc(d.label)}</span><span class="doc-chips">${chips}</span></div>
-      ${src}
-    </div>`;
+    return `<li class="doc" data-track="${esc(d.track)}"><span class="doc-label">${esc(d.label)}</span>${tagsHTML(d)}${src}</li>`;
   }
 
   function stepHTML(s){
-    const finChip = s.track==='financed' ? '<span class="chip fin">מימון</span>' : '';
-    const owner = s.owner ? `<span class="owner">אחראי: ${esc(ownerLabel(s.owner))}</span>` : '';
+    const fin = s.track==='financed' ? '<span class="tag">מימון</span>' : '';
+    const owner = s.owner ? `<div class="meta-line"><b>אחראי:</b> ${esc(ownerLabel(s.owner))}</div>` : '';
     const docs = s.documents || [];
-    const total = docs.length;
-    const finDocs = docs.filter(d=>d.track==='financed').length;
-    const cnt = total
-      ? `<span class="chip doc-count" data-count-financed="${total}" data-count-cash="${total-finDocs}">${docCountLabel(total)}</span>`
-      : `<span class="chip doc-count muted">ללא מסמכים</span>`;
     const deps = depsLabel(s.depends_on);
     const depsLine = deps ? `<div class="deps">תלוי ב: ${esc(deps)}</div>` : '';
-    const notes = s.notes ? `<div class="note">📝 ${esc(s.notes)}</div>` : '';
-    const docsHTML = total ? docs.map(docHTML).join('') : '<div class="empty">— אין מסמכים בשלב זה —</div>';
+    const notes = s.notes ? `<div class="note">${esc(s.notes)}</div>` : '';
+    const docsHTML = docs.length ? `<ol class="docs">${docs.map(docHTML).join('')}</ol>` : '<div class="empty">— אין מסמכים בשלב זה —</div>';
     return `<div class="step" data-track="${esc(s.track)}">
-      <div class="step-head"><span class="step-title">${esc(s.title)}</span>${finChip}${cnt}<span class="chev">▾</span></div>
-      <div class="step-body">
-        <div class="step-meta">${owner}</div>
-        ${depsLine}${notes}
-        <div class="docs">${docsHTML}</div>
-      </div>
+      <div class="step-head"><span class="step-title">${esc(s.title)}</span>${fin}<span class="marker"></span></div>
+      <div class="step-body">${owner}${depsLine}${docsHTML}${notes}</div>
     </div>`;
   }
 
   function phaseHTML(p){
-    const finChip = p.track==='financed' ? '<span class="chip fin">מסלול מימון</span>' : '';
-    const owner = p.owner ? `<span class="owner">אחראי: ${esc(ownerLabel(p.owner))}</span>` : '';
-    const timing = p.timing ? `<div class="note timing">⏱ <b>תזמון:</b> ${esc(p.timing)}</div>` : '';
+    const fin = p.track==='financed' ? '<span class="tag">מימון</span>' : '';
+    const timing = p.timing ? `<div class="meta-line"><b>תזמון:</b> ${esc(p.timing)}</div>` : '';
     const steps = (p.steps||[]).map(stepHTML).join('');
     return `<div class="phase" data-track="${esc(p.track)}">
       <div class="phase-head">
         <span class="phase-num"></span>
         <span class="phase-title">${esc(p.title)}</span>
-        ${finChip}${owner}
-        <span class="chev">▾</span>
+        ${fin}
+        <span class="marker"></span>
       </div>
       <div class="phase-body">${timing}${steps}</div>
     </div>`;
@@ -495,7 +424,7 @@
     const resolved = (DATA.resolved||[]).map(x=>`<li>${esc(x)}</li>`).join('');
     const open = (DATA.open_items||[]).map(x=>`<li>${esc(x)}</li>`).join('');
     document.getElementById('about-body').innerHTML =
-      (m.versions_note?`<div class="note">ℹ️ ${esc(m.versions_note)}</div>`:'') +
+      (m.versions_note?`<div class="note">${esc(m.versions_note)}</div>`:'') +
       (resolved?`<h4>הוכרע (resolved)</h4><ul>${resolved}</ul>`:'') +
       (open?`<h4>פתוח (open items)</h4><ul class="open">${open}</ul>`:'');
   }
@@ -518,12 +447,7 @@
     document.querySelectorAll('#phases .phase').forEach(ph=>{
       if(cash && ph.dataset.track==='financed') return;
       n++;
-      const b=ph.querySelector('.phase-num'); if(b) b.textContent=n;
-    });
-    document.querySelectorAll('#phases .doc-count').forEach(b=>{
-      if(b.classList.contains('muted')) return;
-      const c = cash ? +b.dataset.countCash : +b.dataset.countFinanced;
-      b.textContent = docCountLabel(c);
+      const b=ph.querySelector('.phase-num'); if(b) b.textContent=n+'.';
     });
   }
 
