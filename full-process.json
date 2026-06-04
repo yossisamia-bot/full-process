@@ -1,87 +1,87 @@
 {
   "meta": {
-    "title": "Full Investor Process — US (Financed track)",
+    "title": "התהליך המלא למשקיע — ארה״ב (מסלול מימון)",
     "version": "0.1-draft",
-    "owner": "Yossi",
-    "purpose": "Source-of-truth for ordered investor pipeline; basis for future UI + document-upload system.",
+    "owner": "יוסי",
+    "purpose": "מקור-אמת לצינור המשקיעים המסודר; בסיס לממשק וכלי העלאת מסמכים עתידי.",
     "tracks": ["financed", "cash"],
     "doc_status_values": ["not_started", "requested", "received", "submitted", "approved", "na"],
-    "versions_note": "Several list versions existed across clients. This is the accessible BASE version to work from."
+    "versions_note": "היו כמה גרסאות רשימה אצל לקוחות שונים. זו גרסת הבסיס הנגישה לעבודה."
   },
   "phases": [
     {
       "id": "p1_onboarding",
-      "title": "Onboarding",
-      "owner": "Yossi",
+      "title": "אונבורדינג / פתיחת לקוח",
+      "owner": "יוסי",
       "track": "both",
       "steps": [
         {
           "id": "p1_go",
-          "title": "GO — close investor & minimal intake",
+          "title": "GO — סגירת המשקיע ואיסוף ראשוני מינימלי",
           "owner": "investor",
           "track": "both",
           "depends_on": [],
           "documents": [
-            { "id": "passport", "label": "Passport scan — each partner (2+)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_en", "label": "Israel residential address (English)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "llc_names", "label": "3 LLC name suggestions (generic)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "full_names_phones", "label": "Full names + mobile phones", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "passport", "label": "סריקת דרכון — כל שותף (2+)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "il_address_en", "label": "כתובת מגורים בישראל (באנגלית)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "llc_names", "label": "3 הצעות לשם LLC (גנרי)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "full_names_phones", "label": "שמות מלאים + טלפונים ניידים", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
         },
         {
           "id": "p1_llc_ein",
-          "title": "Form LLC + EIN",
-          "owner": "Yossi+CPA",
+          "title": "הקמת LLC + EIN",
+          "owner": "יוסי+CPA",
           "track": "both",
           "depends_on": ["p1_go"],
           "documents": [
-            { "id": "ss4", "label": "SS4 form (signed, returned to CPA)", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "ein_letter", "label": "EIN issuance letter (IRS)", "provided_by": "yossi", "track": "both", "required": true, "upload": true }
+            { "id": "ss4", "label": "טופס SS4 (חתום, מוחזר ל-CPA)", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
+            { "id": "ein_letter", "label": "מכתב הנפקת EIN (IRS)", "provided_by": "yossi", "track": "both", "required": true, "upload": true }
           ]
         }
       ]
     },
     {
       "id": "p1b_bank",
-      "title": "US Bank account (Mercury)",
-      "owner": "Yossi+investor",
+      "title": "חשבון בנק אמריקאי (Mercury)",
+      "owner": "יוסי+משקיע",
       "track": "both",
       "steps": [
         {
           "id": "p1b_open",
-          "title": "Open Mercury account (Meet ~20min)",
+          "title": "פתיחת חשבון Mercury (פגישת Meet ~20 דק׳)",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p1_llc_ein"],
           "documents": [
-            { "id": "passport_uncropped", "label": "Passport photo uncropped (taken live)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_proof", "label": "Israel address verification scan (arnona/electric/water)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "personal_emails", "label": "Personal emails of each partner", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך (מצולם בשידור חי)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "personal_emails", "label": "מיילים אישיים של כל שותף", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
         },
         {
           "id": "p1b_fund",
-          "title": "Fund account (test transfer then large)",
+          "title": "הזרמת כספים לחשבון (העברת בדיקה ואז גדולה)",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p1b_open"],
           "documents": [
-            { "id": "il_tax_declaration", "label": "Israel Tax Authority declaration — internal tool; given to the client's Israeli banker to enable the transfer", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
-            { "id": "test_transfer", "label": "Small test transfer then large transfers", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "il_tax_declaration", "label": "הצהרת רשות המסים בישראל — כלי פנימי; נמסר לבנקאי הישראלי של הלקוח כדי לאפשר את ההעברה", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
+            { "id": "test_transfer", "label": "העברת בדיקה קטנה ואז העברות גדולות", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
-          "notes": "IL bank -> Mercury defined as 'transfer to foreign account / same legal entity' to avoid VAT/tax on the transfer."
+          "notes": "העברה מבנק ישראלי ל-Mercury מוגדרת כ׳העברה לחשבון בחו״ל / אותה ישות משפטית׳ כדי להימנע מ-VAT/מס על ההעברה."
         }
       ]
     },
     {
       "id": "p2_property",
-      "title": "Property selection & contract",
-      "owner": "Builder/Yossi+investor",
+      "title": "בחירת נכס וחוזה",
+      "owner": "קבלן/יוסי+משקיע",
       "track": "both",
       "steps": [
         {
           "id": "p2_find",
-          "title": "Find property, negotiate with builder, present option; investor approves",
+          "title": "איתור נכס, מו״מ מול הקבלן, הצגת אופציה; המשקיע מאשר",
           "owner": "builder",
           "track": "both",
           "depends_on": ["p1_go"],
@@ -89,127 +89,127 @@
         },
         {
           "id": "p2_funds_ready",
-          "title": "Funds ready for earnest",
+          "title": "כספים מוכנים למקדמה (earnest)",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p1b_fund"],
           "documents": [
-            { "id": "funds_ready", "label": "Earnest funds available (IL or US)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "funds_ready", "label": "כספי מקדמה זמינים (ישראל או ארה״ב)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
         },
         {
           "id": "p2_pof",
-          "title": "Proof of funds (POF)",
+          "title": "הוכחת יכולת כספית (POF)",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p1b_fund"],
           "documents": [
-            { "id": "pof", "label": "Bank balance page showing amount (English preferred)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+            { "id": "pof", "label": "דף יתרת בנק שמראה את הסכום (עדיף באנגלית)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
           ]
         },
         {
           "id": "p2_contract",
-          "title": "Sign contract + earnest deposit",
+          "title": "חתימת חוזה + הפקדת מקדמה",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p2_find", "p2_funds_ready"],
           "documents": [
-            { "id": "purchase_agreement", "label": "Builder purchase agreement — both sign, send signed copy to Yossi", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "earnest_payment", "label": "Earnest money via builder link / Mercury", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "rep_agreement", "label": "Representation Agreement — both sign", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+            { "id": "purchase_agreement", "label": "חוזה רכישה מול הקבלן — שני הצדדים חותמים, שולחים עותק חתום ליוסי", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "earnest_payment", "label": "תשלום מקדמה (earnest) דרך קישור הקבלן / Mercury", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "rep_agreement", "label": "הסכם ייצוג (Representation Agreement) — שני הצדדים חותמים", "provided_by": "investor", "track": "both", "required": true, "upload": true }
           ]
         }
       ]
     },
     {
       "id": "p3_pm",
-      "title": "Property Manager intro & pre-closing",
+      "title": "היכרות עם מנהל הנכס וטרום-סגירה",
       "owner": "pm",
       "track": "both",
       "steps": [
         {
           "id": "p3_intro",
-          "title": "PM intro; forward all property emails",
+          "title": "היכרות עם מנהל הנכס; העברת כל מיילי הנכס",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p2_contract"],
           "documents": [
-            { "id": "forward_emails", "label": "Forward all property emails (~8-9) to the property manager", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "forward_emails", "label": "העברת כל מיילי הנכס (~8-9) למנהל הנכס", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
         },
         {
           "id": "p3_invoice",
-          "title": "PM invoice (closing + home prep)",
+          "title": "חשבונית מנהל הנכס (סגירה + הכנת הבית)",
           "owner": "pm",
           "track": "both",
           "depends_on": ["p3_intro"],
           "documents": [
-            { "id": "pm_invoice", "label": "Invoice: inspection, appraisal, blinds+garage opener, service fee, LLC/CPA, utility deposits", "provided_by": "pm", "track": "both", "required": true, "upload": true }
+            { "id": "pm_invoice", "label": "חשבונית: בדק בית (inspection), שמאות (appraisal), תריסים+שלט חניה, דמי שירות, LLC/CPA, פיקדונות חברות תשתית", "provided_by": "pm", "track": "both", "required": true, "upload": true }
           ],
-          "notes": "Ongoing management 8% of rent, starts after tenant moves in."
+          "notes": "ניהול שוטף 8% מהשכירות, מתחיל אחרי שהדייר נכנס."
         }
       ]
     },
     {
       "id": "p4_loan",
-      "title": "Loan documents (lender clear-to-close)",
-      "owner": "Yossi+investor",
+      "title": "מסמכי הלוואה (clear-to-close מול המלווה)",
+      "owner": "יוסי+משקיע",
       "track": "financed",
-      "timing": "Starts ONLY after contract signed + earnest paid. Do not send loan paperwork earlier (avoid scaring the client).",
+      "timing": "מתחיל רק אחרי חתימת החוזה + תשלום המקדמה. לא לשלוח ניירת הלוואה קודם (כדי לא להבהיל את הלקוח).",
       "steps": [
         {
           "id": "p4_stability",
-          "title": "Stability questions for finance company",
+          "title": "שאלות יציבות עבור חברת המימון",
           "owner": "investor",
           "track": "financed",
           "depends_on": ["p2_contract"],
           "documents": [
-            { "id": "stability_q", "label": "Years at address / owner-or-renter / married-status", "provided_by": "investor", "track": "financed", "required": true, "upload": false }
+            { "id": "stability_q", "label": "שנים בכתובת / בעלים-או-שוכר / מצב משפחתי", "provided_by": "investor", "track": "financed", "required": true, "upload": false }
           ]
         },
         {
           "id": "p4_clear_to_close",
-          "title": "Clear-to-close package (5 conditions)",
+          "title": "חבילת clear-to-close (5 תנאים)",
           "owner": "investor",
           "track": "financed",
           "depends_on": ["p1_llc_ein", "p1b_fund", "p2_contract"],
           "documents": [
-            { "id": "operating_agreement", "label": "Operating Agreement for the LLC", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
-            { "id": "ein_letter_loan", "label": "EIN issuance letter (IRS)", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
-            { "id": "mercury_2mo", "label": "2 months Mercury bank statements", "provided_by": "investor", "track": "financed", "required": true, "upload": true },
-            { "id": "earnest_txn_history", "label": "Transaction history showing earnest payment (if not in statements)", "provided_by": "investor", "track": "financed", "required": false, "upload": true },
-            { "id": "credit_worthiness", "label": "Credit worthiness — one of: intl credit report / credit reference letter / IL bank statements 60 days back", "provided_by": "investor", "track": "financed", "required": true, "upload": true }
+            { "id": "operating_agreement", "label": "Operating Agreement של ה-LLC", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
+            { "id": "ein_letter_loan", "label": "מכתב הנפקת EIN (IRS)", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
+            { "id": "mercury_2mo", "label": "דפי חשבון Mercury של חודשיים", "provided_by": "investor", "track": "financed", "required": true, "upload": true },
+            { "id": "earnest_txn_history", "label": "היסטוריית תנועות שמראה את תשלום המקדמה (אם לא מופיע בדפי החשבון)", "provided_by": "investor", "track": "financed", "required": false, "upload": true },
+            { "id": "credit_worthiness", "label": "כושר אשראי — אחד מ: דוח אשראי בינלאומי / מכתב המלצת אשראי / דפי חשבון מישראל 60 יום אחורה", "provided_by": "investor", "track": "financed", "required": true, "upload": true }
           ],
-          "notes": "Translation flag: any non-English doc needs professional English translation."
+          "notes": "דגל תרגום: כל מסמך שאינו באנגלית דורש תרגום מקצועי לאנגלית."
         }
       ]
     },
     {
       "id": "p5_closing",
-      "title": "Signing & closing",
+      "title": "חתימה וסגירה",
       "owner": "title/escrow",
       "track": "both",
       "steps": [
         {
           "id": "p5_sign_wire",
-          "title": "Sign in portal; wire the balance; close",
+          "title": "חתימה בפורטל; העברת היתרה בהעברה בנקאית; סגירה",
           "owner": "investor",
           "track": "both",
           "depends_on": ["p4_clear_to_close", "p3_invoice"],
           "documents": [
-            { "id": "closing_docs", "label": "All signing docs in title/escrow portal", "provided_by": "title", "track": "both", "required": true, "upload": false },
-            { "id": "balance_wire", "label": "Wire the balance (wire instructions in portal)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "closing_docs", "label": "כל מסמכי החתימה בפורטל ה-title/escrow", "provided_by": "title", "track": "both", "required": true, "upload": false },
+            { "id": "balance_wire", "label": "העברת היתרה (הוראות ההעברה בפורטל)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
         }
       ]
     }
   ],
   "resolved": [
-    "'Tax document' = Israel Tax Authority declaration (internal tool), not US. Placed in p1b_fund.",
-    "Loan phase starts only after contract signed + earnest paid. Set as p4_loan.timing.",
-    "Cash track skips only p4_loan (financing). Everything else identical."
+    "׳מסמך מס׳ = הצהרת רשות המסים בישראל (כלי פנימי), לא אמריקאי. ממוקם ב-p1b_fund.",
+    "שלב ההלוואה מתחיל רק אחרי חתימת חוזה + תשלום מקדמה. מוגדר ב-p4_loan.timing.",
+    "מסלול מזומן מדלג רק על p4_loan (מימון). כל השאר זהה."
   ],
   "open_items": [
-    "Full parallel-vs-serial mapping: confirm which steps can run concurrently (e.g. account funding during property search) vs strict dependencies — needs Yossi's pass over the order."
+    "מיפוי מלא של מקבילי-מול-סדרתי: לאשר אילו שלבים יכולים לרוץ במקביל (למשל הזרמת כספים בזמן חיפוש נכס) מול תלויות נוקשות — דורש מעבר של יוסי על הסדר."
   ]
 }
