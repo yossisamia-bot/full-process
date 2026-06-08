@@ -140,7 +140,7 @@
           "track": "both",
           "depends_on": ["p2_contract"],
           "documents": [
-            { "id": "pm_heads_up", "label": "יוסי שולח ללקוח הודעה קצרה על מנהל הנכס", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
+            { "id": "pm_heads_up", "label": "יוסי שולח ללקוח הודעה קולית שמסבירה מי מנהל הנכס, יחד עם כתובת המייל שלו — מיד אחרי חתימת החוזה + תשלום המקדמה, עוד לפני מייל ההיכרות שמנהל הנכס שולח", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
             { "id": "forward_emails", "label": "העברת כל מיילי הנכס למנהל הנכס (מכאן הוא מנהל את כל המיילים שמתקבלים)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
           "notes": "מנהל הנכס שולח מייל הכירות וממשיך לנהל את הלקוח על כל המיילים שמתקבלים. במקביל הוא אוסף מהלקוח את מסמכי ההלוואה שמכינים."
