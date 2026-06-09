@@ -170,9 +170,10 @@
           "depends_on": ["p1_go"],
           "documents": [
             { "id": "ss4", "label": "טופס SS4 ריק — מגיע מיד אחרי הקמת החברה; יוסי מחזיר אותו חתום ל-CPA", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "ein_letter", "label": "מכתב הנפקת EIN (IRS) — מגיע לבד מה-CPA, אין מה לעשות פרט להמתין", "provided_by": "cpa", "track": "both", "required": true, "upload": true }
+            { "id": "ein_letter", "label": "מכתב הנפקת EIN (IRS) — מגיע לבד מה-CPA, אין מה לעשות פרט להמתין", "provided_by": "cpa", "track": "both", "required": true, "upload": true },
+            { "id": "registered_address_consent", "label": "אישור שימוש בכתובת רשומה (לרישום ה-LLC)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
-          "notes": "מכתב ה-EIN מגיע מעצמו מה-CPA כשבועיים אחרי הקמת החברה — רק להמתין ולשמור אותו סרוק בתיקייה. טופס SS4 ריק מגיע מיד עם הקמת החברה, ויוסי מחזיר אותו חתום ל-CPA."
+          "notes": "מכתב ה-EIN מגיע מעצמו מה-CPA כשבועיים אחרי הקמת החברה — רק להמתין ולשמור אותו סרוק בתיקייה. טופס SS4 ריק מגיע מיד עם הקמת החברה, ויוסי מחזיר אותו חתום ל-CPA. לרישום נדרשים גם אחוזי הבעלות המדויקים של כל שותף."
         }
       ]
     },
@@ -189,8 +190,8 @@
           "track": "both",
           "depends_on": ["p1_llc_ein"],
           "documents": [
-            { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך (מצולם בשידור חי בפגישה)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים, או ספח תעודת זהות עם הכתובת)", "provided_by": "investor", "track": "both", "required": true, "upload": true }
+            { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך — סרוק + פיזי (מצולם בשידור חי בפגישה)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
+            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים, או ספח תעודת זהות עם הכתובת) — לבנק, ללא צורך בתרגום", "provided_by": "investor", "track": "both", "required": true, "upload": true }
           ],
           "notes": "מה שכבר בידינו מהשלבים הקודמים (תנאי לפתיחת הבנק): מיילים אישיים של כל שותף (נאספו באונבורדינג), כתובת רשומה בארה״ב (מה-LLC), ומכתב EIN סרוק השמור בתיקייה — בלעדיו לא היינו מתחילים תהליך בנק."
         },
@@ -201,10 +202,11 @@
           "track": "both",
           "depends_on": ["p1b_open"],
           "documents": [
-            { "id": "il_tax_declaration", "label": "הצהרת רשות המסים בישראל — כלי פנימי; נמסר לבנקאי הישראלי של הלקוח כדי לאפשר את ההעברה", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
+            { "id": "il_tax_declaration", "label": "הצהרת רשות המסים בישראל — כלי פנימי (יש כלי ל-Code שממלא אותה מהפרטים שבמערכת); נמסר לבנקאי הישראלי של הלקוח כדי לאפשר את ההעברה", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
+            { "id": "account_conduct_early", "label": "אישור ניהול חשבון — בישראל וגם ב-Mercury — נדרש כבר כאן (לטובת הצהרת המס) וגם בהמשך למלווה; לכן אוספים את שניהם כבר עכשיו", "provided_by": "investor", "track": "both", "required": true, "upload": true },
             { "id": "test_transfer", "label": "העברת בדיקה קטנה (~20 דולר), ואז ההעברה הגדולה — עד 200 אלף דולר או פחות", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
-          "notes": "העברה מבנק ישראלי ל-Mercury מוגדרת כ׳העברה לחשבון בחו״ל / אותה ישות משפטית׳ כדי להימנע מ-VAT/מס על ההעברה."
+          "notes": "העברה מבנק ישראלי ל-Mercury מוגדרת כ׳העברה לחשבון בחו״ל / אותה ישות משפטית׳ כדי להימנע מ-VAT/מס על ההעברה. אישור ניהול חשבון (ישראלי + Mercury) נאסף כבר כאן — נחוץ להצהרת המס וגם בהמשך למלווה (front-loading)."
         },
         {
           "id": "p1b_pof",
@@ -233,7 +235,7 @@
           "depends_on": ["p1b_pof"],
           "documents": [
             { "id": "ready_msg", "label": "הודעת ״אפשר להתקדם״ לקבלן (מייל/Trello) עם פרטי הלקוח", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "stability_q", "label": "נתוני יציבות שהקבלן מבקש: כמה שנים גרים בכתובת, שוכרים או בעלים, נשואים או רווקים, וכו׳", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "stability_q", "label": "נתוני יציבות + העדפות שהקבלן מבקש: כמה שנים גרים בכתובת, שוכרים או בעלים, נשואים או רווקים, והעדפת נכס (חד או דו-קומתי)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
           "notes": "שנייה לפני שהקבלן מחפש בית — יוסי שולח ״אפשר להתקדם״ עם הלקוח + נתוני היציבות שהקבלן ביקש. פירוט מלא במיילים ב-Trello, ויש סקיל ייעודי לזה."
         },
@@ -272,10 +274,11 @@
           "track": "both",
           "depends_on": ["p2_contract"],
           "documents": [
-            { "id": "pm_heads_up", "label": "יוסי שולח ללקוח הודעה קולית: מי מנהל הנכס + כתובת המייל שלו, ומסביר כבר עכשיו את שני הכובעים שלו ואת דמי הליווי. מיד אחרי חתימת החוזה + תשלום המקדמה, לפני מייל ההיכרות של מנהל הנכס", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
+            { "id": "pm_heads_up", "label": "יוסי שולח ללקוח הודעה קולית: מי מנהל הנכס + כתובת המייל שלו, ומסביר כבר עכשיו את שני הכובעים שלו ואת דמי הליווי — וכן מקדים על חוזה הליווי ועל ה-Operating Agreement. מיד אחרי חתימת החוזה + תשלום המקדמה, לפני מייל ההיכרות של מנהל הנכס", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
+            { "id": "oa_distribution", "label": "יוסי שולח (במקביל לאינטרו) את חוזה הליווי + Operating Agreement: עותק מסומן (״זוהרים״) להמחשה + עותק נקי למיילים של שני בני הזוג, שיהיה להם לשינויים עתידיים. החתימה הפורמלית על הליווי — אחרי תשלום החשבונית", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
             { "id": "forward_emails", "label": "העברת כל מיילי הנכס למנהל הנכס (מכאן הוא מנהל את כל המיילים שמתקבלים)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
-          "notes": "מנהל הנכס שולח מייל הכירות וממשיך לנהל את הלקוח על כל המיילים שמתקבלים. במקביל הוא אוסף מהלקוח את מסמכי ההלוואה שמכינים. שני הכובעים שמוסברים כבר באינטרו: (1) ליווי וסגירת העסקה — ולכן החשבונית כוללת את דמי הליווי; (2) הכובע הראשי — ניהול הנכס ומציאת שוכר (דמי ניהול שוטפים אחרי כניסת דייר). מכיוון שדמי הליווי כבר הוסברו באינטרו, חוזה הליווי הפורמלי נשלח לחתימה רק אחרי תשלום החשבונית — כדי לא להעמיס אינטרו+חשבונית+חוזה יחד."
+          "notes": "מנהל הנכס שולח מייל הכירות וממשיך לנהל את הלקוח על כל המיילים שמתקבלים. במקביל הוא אוסף מהלקוח את מסמכי ההלוואה שמכינים. שני הכובעים שמוסברים כבר באינטרו: (1) ליווי וסגירת העסקה — ולכן החשבונית כוללת את דמי הליווי; (2) הכובע הראשי — ניהול הנכס ומציאת שוכר (דמי ניהול שוטפים אחרי כניסת דייר). באינטרו יוסי גם מקדים על חוזה הליווי וה-Operating Agreement ושולח עותקים (מסומן + נקי לשני בני הזוג); החתימה הפורמלית על הליווי נעשית רק אחרי תשלום החשבונית — כדי לא להעמיס אינטרו+חשבונית+חוזה יחד."
         },
         {
           "id": "p3_invoice",
@@ -284,7 +287,8 @@
           "track": "both",
           "depends_on": ["p3_intro"],
           "documents": [
-            { "id": "pm_invoice", "label": "חשבונית: בדק בית (inspection), שמאות (appraisal), תריסים+שלט חניה, דמי ליווי (מעוגנים בחוזה הליווי), LLC/CPA, פיקדונות חברות תשתית", "provided_by": "pm", "track": "both", "required": true, "upload": true }
+            { "id": "pm_invoice", "label": "חשבונית: בדק בית (inspection), שמאות (appraisal), תריסים+שלט חניה, דמי ליווי (מעוגנים בחוזה הליווי), LLC/CPA, פיקדונות חברות תשתית", "provided_by": "pm", "track": "both", "required": true, "upload": true },
+            { "id": "mortgage_doc_fwd", "label": "מסמך משכנתא — מגיע מתישהו בשלב זה; יוסי מעביר אותו למשקיעים עם הסבר קצר בכמה מילים", "provided_by": "yossi", "track": "financed", "required": false, "upload": false }
           ],
           "notes": "מעבירים למנהל הנכס את הכסף עבור כל הסגירות. ניהול שוטף 8% מהשכירות מתחיל אחרי שהדייר נכנס."
         },
@@ -342,9 +346,10 @@
           "depends_on": ["p4_clear_to_close", "p3_invoice"],
           "documents": [
             { "id": "closing_docs", "label": "כל מסמכי החתימה בפורטל ה-title/escrow", "provided_by": "title", "track": "both", "required": true, "upload": false },
-            { "id": "balance_wire", "label": "העברת היתרה (הוראות ההעברה בפורטל)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
+            { "id": "notary_mail", "label": "חתימה מול נוטריון ושליחת מסמכי הסגירה בדואר לכתובת ה-title company בארה״ב (פר-עסקה) — מנהל הנכס ממשיך מול הלקוח על המסמכים לחתימה", "provided_by": "investor", "track": "both", "required": true, "upload": false },
+            { "id": "balance_wire", "label": "העברת היתרה (הוראות ההעברה בפורטל) — חתימה שנייה ותשלום היתרה, וזהו", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ],
-          "notes": "במסלול מימון — אחרי שהמשכנתא מאושרת. במזומן — חתימה והעברת יתרה ישירות."
+          "notes": "במסלול מימון — אחרי שהמשכנתא מאושרת. במזומן — חתימה והעברת יתרה ישירות. שלב הסגירה: חתימה שנייה (מול נוטריון) + תשלום היתרה. כתובת ה-title company למשלוח שמורה בקנוני הפנימי (לא באתר הציבורי)."
         },
         {
           "id": "p5_tenant",
