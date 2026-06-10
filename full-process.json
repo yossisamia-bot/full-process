@@ -125,6 +125,17 @@
             { "id": "purchase_agreement", "label": "חוזה רכישה — נשלח במייל, המשקיע חותם ← השותף חותם ← שולחים ליוסי חוזה חתום; יוסי מאמת את סכום המקדמה", "provided_by": "investor", "track": "both", "required": true, "upload": true },
             { "id": "earnest_payment", "label": "תשלום מקדמה (earnest) — דרך לינק מקוון מהקבלן: ממלאים פרטי בנק וההעברה מתבצעת", "provided_by": "investor", "track": "both", "required": true, "upload": false }
           ]
+        },
+        {
+          "id": "p2_mercury_notify",
+          "title": "שליחת החוזה החתום ל-Mercury (שירות לקוחות)",
+          "owner": "yossi",
+          "track": "both",
+          "depends_on": ["p2_contract"],
+          "documents": [
+            { "id": "signed_contract_to_mercury", "label": "עותק חתום של חוזה הרכישה — יוסי שולח אותו מיד ל-Mercury (שירות לקוחות)", "provided_by": "yossi", "track": "both", "required": true, "upload": true }
+          ],
+          "notes": "מיד אחרי חתימת חוזה הרכישה + תשלום המקדמה: שולחים ל-Mercury (שירות לקוחות) עותק חתום של החוזה. שתי מטרות: (1) שיֵדעו שהשימוש בחשבון תואם למטרה שהוצהרה בעת פתיחתו; (2) שההעברה הבאה — הגדולה יותר (יתרת הסגירה) — תאושר מראש ללא עיכוב."
         }
       ]
     },
