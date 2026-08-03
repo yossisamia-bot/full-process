@@ -3,524 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>התהליך המלא — משקיע ארה״ב</title>
+<meta name="robots" content="noindex">
+<title>התהליך המלא - השקעת נדל"ן בארה"ב</title>
 <style>
   :root{
-    --ink:#1f2328; --muted:#6b7280; --faint:#9aa0a6;
-    --line:#d6dade; --line-soft:#ededed; --bg:#ffffff; --accent:#384150;
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1c2733; --muted:#5b6b7b;
+    --accent:#0e6e5c; --accent-soft:#e3f2ee; --line:#e4e8ee;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--ink); padding:22px 16px; line-height:1.55; font-size:15px;}
-  .wrap{max-width:760px; margin:0 auto;}
-
-  header{padding:2px 2px 12px; border-bottom:2px solid var(--ink);}
-  header h1{font-size:1.2rem; font-weight:700; letter-spacing:-.2px;}
-  header .sub{font-size:.76rem; color:var(--muted); margin-top:4px;}
-
-  /* Toolbar */
-  .toolbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--line-soft);}
-  .track-toggle{display:inline-flex; border:1px solid var(--accent); border-radius:4px; overflow:hidden;}
-  .track-toggle button{border:none; background:#fff; color:var(--accent); font-family:inherit; font-size:.82rem; font-weight:600; padding:5px 16px; cursor:pointer;}
-  .track-toggle button.active{background:var(--accent); color:#fff;}
-  .tool-sep{flex:1;}
-  .mini-btn{border:1px solid var(--line); background:#fff; color:var(--muted); font-family:inherit; font-size:.78rem; font-weight:500; padding:5px 12px; border-radius:4px; cursor:pointer;}
-  .mini-btn:hover{background:#f5f6f7;}
-  .src-ind{font-size:.7rem; color:var(--faint); white-space:nowrap;}
-
-  .legend{font-size:.72rem; color:var(--faint); padding:9px 2px 2px;}
-
-  /* Marker (+/−) — replaces all chevrons/circles */
-  .marker{flex-shrink:0; width:1em; text-align:center; color:var(--faint); font-weight:600; line-height:1;}
-  .marker::before{content:'+';}
-  .phase.open > .phase-head .marker::before,
-  .step.open > .step-head .marker::before,
-  .about.open > .about-head .marker::before{content:'\2212';}
-
-  /* Phase — dry outline row */
-  .phase{border-bottom:1px solid var(--line);}
-  .phase-head{display:flex; align-items:baseline; gap:8px; padding:12px 2px; cursor:pointer; user-select:none;}
-  .phase-num{flex-shrink:0; min-width:1.5em; color:var(--muted); font-weight:700; font-variant-numeric:tabular-nums;}
-  .phase-title{flex:1; font-size:1rem; font-weight:600;}
-  .phase-body{display:none; padding:0 0 8px;}
-  .phase.open > .phase-body{display:block;}
-
-  /* Step — nested list inside an open phase */
-  .step{border-top:1px solid var(--line-soft);}
-  .step-head{display:flex; align-items:baseline; gap:8px; padding:9px 0; padding-inline-start:1.8em; cursor:pointer; user-select:none;}
-  .step-title{flex:1; font-size:.9rem; font-weight:500;}
-  .step-body{display:none; padding:2px 0 12px; padding-inline-start:2.6em;}
-  .step.open > .step-body{display:block;}
-
-  .meta-line{font-size:.8rem; color:var(--muted); margin:2px 0;}
-  .meta-line b{color:var(--ink); font-weight:600;}
-  .deps{font-size:.78rem; color:var(--muted); margin:2px 0;}
-
-  /* Tags — muted inline text, not pills */
-  .tag{font-size:.72rem; color:var(--faint); white-space:nowrap;}
-  .tag::before{content:'· '; color:var(--line);}
-
-  /* Docs — plain ordered list, appears only inside an open step */
-  ol.docs{list-style:none; margin:7px 0 0; padding:0;}
-  .doc{padding:5px 0; border-top:1px dotted var(--line-soft); font-size:.84rem;}
-  .doc:first-child{border-top:none;}
-  .doc-label{color:var(--ink);}
-  .src{font-size:.68rem; color:var(--faint); margin-top:2px; font-family:'Consolas',monospace;}
-  .empty{font-size:.8rem; color:var(--faint); padding:5px 0;}
-
-  /* Notes — plain start-border quote */
-  .note{font-size:.8rem; color:var(--muted); border-inline-start:2px solid var(--line); padding-inline-start:10px; margin:9px 0 0;}
-
-  /* About */
-  .about{margin-top:20px; border-top:2px solid var(--ink);}
-  .about-head{display:flex; align-items:baseline; gap:8px; padding:12px 2px; cursor:pointer; user-select:none; font-weight:600;}
-  .about-body{display:none; padding:0 2px 14px;}
-  .about.open > .about-body{display:block;}
-  .about-body h4{font-size:.82rem; color:var(--muted); margin:14px 0 4px; font-weight:700;}
-  .about-body ul{padding-inline-start:18px; font-size:.8rem; color:var(--muted);}
-  .about-body ul li{margin-bottom:4px;}
-
-  /* Cash mode: hide financed-only items */
-  body.mode-cash [data-track="financed"]{display:none !important;}
-
-  footer{text-align:center; font-size:.7rem; color:var(--faint); padding:22px 0 6px; margin-top:8px; border-top:1px solid var(--line-soft);}
-
-  @media (max-width:600px){
-    body{padding:14px 12px; font-size:14px;}
-    header h1{font-size:1.08rem;}
-    .step-head{padding-inline-start:1.4em;}
-    .step-body{padding-inline-start:2em;}
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12181f; --card:#1a222b; --ink:#e8edf2; --muted:#9fb0c0;
+      --accent:#3fbfa4; --accent-soft:#1e3730; --line:#2a3542;
+    }
   }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.6; padding:32px 16px 48px;
+  }
+  .wrap{max-width:640px; margin:0 auto}
+  header{text-align:center; margin-bottom:28px}
+  h1{font-size:1.6em; margin-bottom:8px}
+  .sub{color:var(--muted); font-size:1.02em}
+  .sub b{color:var(--ink)}
+  ol.steps{list-style:none; counter-reset:step}
+  ol.steps li{
+    counter-increment:step; position:relative;
+    background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:14px 58px 14px 16px; margin-bottom:10px;
+  }
+  ol.steps li::before{
+    content:counter(step); position:absolute; right:14px; top:14px;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    font-weight:bold; display:flex; align-items:center; justify-content:center;
+  }
+  ol.steps li h2{font-size:1.05em; margin-bottom:2px}
+  ol.steps li p{color:var(--muted); font-size:.95em}
+  .note{
+    background:var(--accent-soft); border-radius:12px;
+    padding:12px 16px; margin:18px 0; font-size:.95em;
+  }
+  footer{
+    text-align:center; color:var(--muted); font-size:.9em;
+    margin-top:26px; border-top:1px solid var(--line); padding-top:16px;
+  }
+  footer a{color:var(--accent); text-decoration:none}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>התהליך המלא — משקיע ארה״ב</h1>
-    <div class="sub" id="subline">טוען…</div>
+    <h1>התהליך המלא - השקעת נדל"ן בארה"ב</h1>
+    <div class="sub">מקצה לקצה בערך <b>3-4 חודשים</b> - משיחה ראשונה ועד שוכר שמשלם</div>
   </header>
 
-  <div class="toolbar">
-    <div class="track-toggle">
-      <button data-mode="financed" class="active">מימון</button>
-      <button data-mode="cash">מזומן</button>
-    </div>
-    <button class="mini-btn" onclick="setAll(true)">הרחב הכל</button>
-    <button class="mini-btn" onclick="setAll(false)">כווץ הכל</button>
-    <span class="tool-sep"></span>
-    <span class="src-ind emb" id="src-ind">…</span>
+  <ol class="steps">
+    <li>
+      <h2>שיחת היכרות והתאמה</h2>
+      <p>מכירים, עוברים על המספרים ובודקים שהמסלול מתאים לכם.</p>
+    </li>
+    <li>
+      <h2>הקמת LLC ומספר EIN</h2>
+      <p>חברה אמריקאית על שמכם - הבית יירשם עליה. הכל מרחוק.</p>
+    </li>
+    <li>
+      <h2>פתיחת חשבון בנק אמריקאי לחברה</h2>
+      <p>גם זה מרחוק, בפגישת וידאו קצרה. הכסף יושב אך ורק בחשבון שלכם.</p>
+    </li>
+    <li>
+      <h2>בחירת בית מהמלאי</h2>
+      <p>בתים חדשים מקבלן באזורי ביקוש במטרו יוסטון.</p>
+    </li>
+    <li>
+      <h2>חתימת חוזה ומקדמה של 5%</h2>
+      <p>המקדמה מקוזזת במלואה במעמד הסגירה.</p>
+    </li>
+    <li>
+      <h2>תהליך מימון</h2>
+      <p>הלוואה אמריקאית על שם החברה. במסלול מזומן פשוט מדלגים על השלב הזה.</p>
+    </li>
+    <li>
+      <h2>סגירה והעברת הבעלות לחברה</h2>
+      <p>חתימה על מסמכי הסגירה והעברת היתרה - הבית עובר לבעלות החברה שלכם.</p>
+    </li>
+    <li>
+      <h2>חיבור לחברת הניהול ושוכר נכנס</h2>
+      <p>חוזה ניהול מסודר מול חברת ניהול מקומית, והשכירות מתחילה.</p>
+    </li>
+    <li>
+      <h2>שגרה</h2>
+      <p>השכירות נכנסת ישירות לחשבון החברה שלכם, ובסוף השנה דוח שנתי מסודר.</p>
+    </li>
+  </ol>
+
+  <div class="note">
+    עלות הליווי: <b>12,000 דולר</b> - שקוף וידוע מראש, בלי הפתעות בדרך.
   </div>
 
-  <div class="legend">מימון = פאזה/שלב במסלול מימון בלבד</div>
-
-  <div id="phases"></div>
-
-  <div class="about">
-    <div class="about-head">
-      <span style="flex:1;">אודות והערות פתוחות</span>
-      <span class="marker"></span>
-    </div>
-    <div class="about-body" id="about-body"></div>
-  </div>
-
-  <footer>כלי פנימי · נקרא מ-<code>full-process.json</code> · v1</footer>
+  <footer>
+    <a href="https://texas.primevest-realty.com/">לעמוד המרכזי של המסלול</a>
+  </footer>
 </div>
-
-<!-- ===== FALLBACK SNAPSHOT =====
-     מקור-האמת הוא full-process.json החיצוני (נטען ב-fetch).
-     ה-JSON למטה הוא snapshot לגיבוי בלבד, כדי שהקובץ יעבוד גם בפתיחה מקומית (file://).
-     אם משנים את full-process.json — לרענן גם את ה-snapshot הזה. -->
-<script type="application/json" id="embedded-data">
-{
-  "meta": {
-    "title": "התהליך המלא למשקיע — ארה״ב (מסלול מימון)",
-    "version": "0.2-draft",
-    "owner": "יוסי",
-    "purpose": "מקור-אמת לצינור המשקיעים המסודר; בסיס לממשק וכלי העלאת מסמכים עתידי.",
-    "tracks": ["financed", "cash"],
-    "doc_status_values": ["not_started", "requested", "received", "submitted", "approved", "na"],
-    "versions_note": "גרסה 0.2 — מבנה מעודכן לפי מעבר של יוסי על הסדר האמיתי (04/06/2026)."
-  },
-  "phases": [
-    {
-      "id": "p1_onboarding",
-      "title": "אונבורדינג / פתיחת לקוח",
-      "owner": "יוסי",
-      "track": "both",
-      "steps": [
-        {
-          "id": "p1_go",
-          "title": "GO — סגירת המשקיע ואיסוף ראשוני מינימלי",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": [],
-          "documents": [
-            { "id": "passport", "label": "סריקת דרכון — כל שותף (2+)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_en", "label": "כתובת מגורים בישראל (באנגלית)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "llc_names", "label": "3 הצעות לשם LLC (גנרי)", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "full_names_phones", "label": "שמות מלאים + טלפונים ניידים", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "partner_emails", "label": "כתובות מייל של כל השותפים בחברה", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "kyc_25pct", "label": "זיהוי כל בעל מניות מעל 25% (KYC) — קריטי לבנק ולמלווה", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ]
-        },
-        {
-          "id": "p1_llc_ein",
-          "title": "הקמת LLC + EIN",
-          "owner": "יוסי+CPA",
-          "track": "both",
-          "depends_on": ["p1_go"],
-          "documents": [
-            { "id": "ss4", "label": "טופס SS4 ריק — מגיע מיד אחרי הקמת החברה; יוסי מחזיר אותו חתום ל-CPA", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "ein_letter", "label": "מכתב הנפקת EIN (IRS) — מגיע לבד מה-CPA, אין מה לעשות פרט להמתין", "provided_by": "cpa", "track": "both", "required": true, "upload": true },
-            { "id": "registered_address_consent", "label": "אישור שימוש בכתובת רשומה (לרישום ה-LLC)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ],
-          "notes": "מכתב ה-EIN מגיע מעצמו מה-CPA כשבועיים אחרי הקמת החברה — רק להמתין ולשמור אותו סרוק בתיקייה. טופס SS4 ריק מגיע מיד עם הקמת החברה, ויוסי מחזיר אותו חתום ל-CPA. לרישום נדרשים גם אחוזי הבעלות המדויקים של כל שותף."
-        }
-      ]
-    },
-    {
-      "id": "p1b_bank",
-      "title": "חשבון בנק אמריקאי (Mercury)",
-      "owner": "יוסי+משקיע",
-      "track": "both",
-      "steps": [
-        {
-          "id": "p1b_open",
-          "title": "פתיחת חשבון Mercury (פגישת Meet ~20 דק׳)",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": ["p1_llc_ein"],
-          "documents": [
-            { "id": "passport_uncropped", "label": "צילום דרכון לא-חתוך — סרוק + פיזי (מצולם בשידור חי בפגישה)", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "il_address_proof", "label": "סריקת אימות כתובת בישראל (ארנונה/חשמל/מים, או ספח תעודת זהות עם הכתובת) — לבנק, ללא צורך בתרגום", "provided_by": "investor", "track": "both", "required": true, "upload": true }
-          ],
-          "notes": "מה שכבר בידינו מהשלבים הקודמים (תנאי לפתיחת הבנק): מיילים אישיים של כל שותף (נאספו באונבורדינג), כתובת רשומה בארה״ב (מה-LLC), ומכתב EIN סרוק השמור בתיקייה — בלעדיו לא היינו מתחילים תהליך בנק."
-        },
-        {
-          "id": "p1b_fund",
-          "title": "הזרמת כספים לחשבון (העברת בדיקה ואז גדולה)",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": ["p1b_open"],
-          "documents": [
-            { "id": "il_tax_declaration", "label": "הצהרת רשות המסים בישראל — כלי פנימי (יש כלי ל-Code שממלא אותה מהפרטים שבמערכת); נמסר לבנקאי הישראלי של הלקוח כדי לאפשר את ההעברה", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
-            { "id": "account_conduct_early", "label": "אישור ניהול חשבון — בישראל וגם ב-Mercury — נדרש כבר כאן (לטובת הצהרת המס) וגם בהמשך למלווה; לכן אוספים את שניהם כבר עכשיו", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "test_transfer", "label": "העברת בדיקה קטנה (~20 דולר), ואז ההעברה הגדולה — עד 200 אלף דולר או פחות", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ],
-          "notes": "העברה מבנק ישראלי ל-Mercury מוגדרת כ׳העברה לחשבון בחו״ל / אותה ישות משפטית׳ כדי להימנע מ-VAT/מס על ההעברה. אישור ניהול חשבון (ישראלי + Mercury) נאסף כבר כאן — נחוץ להצהרת המס וגם בהמשך למלווה (front-loading)."
-        },
-        {
-          "id": "p1b_pof",
-          "title": "POF — הוכחת יכולת כספית (מיד עם ההעברה הגדולה)",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": ["p1b_fund"],
-          "documents": [
-            { "id": "pof", "label": "דף יתרת Mercury שמראה את הסכום (עדיף באנגלית) — יורד מיד עם ההעברה הגדולה, נשלח ליוסי וממנו למלווה", "provided_by": "investor", "track": "both", "required": true, "upload": true }
-          ],
-          "notes": "מיד עם ההעברה הגדולה: מורידים POF מ-Mercury ← שולחים ליוסי ← יוסי מעביר למלווה ← track. רק אחרי שה-POF אצל המלווה הקבלן מתחיל לחפש בית."
-        }
-      ]
-    },
-    {
-      "id": "p2_property",
-      "title": "בחירת נכס וחוזה",
-      "owner": "קבלן/יוסי+משקיע",
-      "track": "both",
-      "steps": [
-        {
-          "id": "p2_ready",
-          "title": "״אפשר להתקדם״ — הודעת התנעה לקבלן",
-          "owner": "yossi",
-          "track": "both",
-          "depends_on": ["p1b_pof"],
-          "documents": [
-            { "id": "ready_msg", "label": "הודעת ״אפשר להתקדם״ לקבלן (מייל/Trello) עם פרטי הלקוח", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "stability_q", "label": "נתוני יציבות + העדפות שהקבלן מבקש: כמה שנים גרים בכתובת, שוכרים או בעלים, נשואים או רווקים, והעדפת נכס (חד או דו-קומתי)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ],
-          "notes": "שנייה לפני שהקבלן מחפש בית — יוסי שולח ״אפשר להתקדם״ עם הלקוח + נתוני היציבות שהקבלן ביקש. פירוט מלא במיילים ב-Trello, ויש סקיל ייעודי לזה."
-        },
-        {
-          "id": "p2_find",
-          "title": "הקבלן מאתר נכס; המשקיע מאשר",
-          "owner": "builder",
-          "track": "both",
-          "depends_on": ["p2_ready"],
-          "documents": []
-        },
-        {
-          "id": "p2_contract",
-          "title": "חתימת חוזה + הפקדת מקדמה (earnest)",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": ["p2_find"],
-          "documents": [
-            { "id": "purchase_agreement", "label": "חוזה רכישה — נשלח במייל, המשקיע חותם ← השותף חותם ← שולחים ליוסי חוזה חתום; יוסי מאמת את סכום המקדמה", "provided_by": "investor", "track": "both", "required": true, "upload": true },
-            { "id": "earnest_payment", "label": "תשלום מקדמה (earnest) — דרך לינק מקוון מהקבלן: ממלאים פרטי בנק וההעברה מתבצעת", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ]
-        },
-        {
-          "id": "p2_mercury_notify",
-          "title": "שליחת החוזה החתום ל-Mercury (שירות לקוחות)",
-          "owner": "yossi",
-          "track": "both",
-          "depends_on": ["p2_contract"],
-          "documents": [
-            { "id": "signed_contract_to_mercury", "label": "עותק חתום של חוזה הרכישה — יוסי שולח אותו מיד ל-Mercury (שירות לקוחות)", "provided_by": "yossi", "track": "both", "required": true, "upload": true }
-          ],
-          "notes": "מיד אחרי חתימת חוזה הרכישה + תשלום המקדמה: שולחים ל-Mercury (שירות לקוחות) עותק חתום של החוזה. שתי מטרות: (1) שיֵדעו שהשימוש בחשבון תואם למטרה שהוצהרה בעת פתיחתו; (2) שההעברה הבאה — הגדולה יותר (יתרת הסגירה) — תאושר מראש ללא עיכוב."
-        }
-      ]
-    },
-    {
-      "id": "p3_pm",
-      "title": "מנהל נכס (PM) והעברת שרביט",
-      "owner": "pm",
-      "track": "both",
-      "timing": "מתניע מיד אחרי חתימת החוזה + תשלום המקדמה. סדר: (1) אינטרו על מנהל הנכס — מסביר את שני הכובעים שלו ואת דמי הליווי; (2) מייל היכרות + חשבונית (כוללת את דמי הליווי); (3) חוזה הליווי לחתימה — רק אחרי תשלום החשבונית, כדי לא להעמיס הכל יחד.",
-      "steps": [
-        {
-          "id": "p3_intro",
-          "title": "התנעת מנהל הנכס + מייל הכירות",
-          "owner": "yossi",
-          "track": "both",
-          "depends_on": ["p2_contract"],
-          "documents": [
-            { "id": "pm_heads_up", "label": "יוסי שולח ללקוח הודעה קולית: מי מנהל הנכס + כתובת המייל שלו, ומסביר כבר עכשיו את שני הכובעים שלו ואת דמי הליווי. מיד אחרי חתימת החוזה + תשלום המקדמה, לפני מייל ההיכרות של מנהל הנכס", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "forward_emails", "label": "העברת כל מיילי הנכס למנהל הנכס (מכאן הוא מנהל את כל המיילים שמתקבלים)", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ],
-          "notes": "מנהל הנכס שולח מייל הכירות וממשיך לנהל את הלקוח על כל המיילים שמתקבלים. במקביל הוא אוסף מהלקוח את מסמכי ההלוואה שמכינים. שני הכובעים שמוסברים כבר באינטרו: (1) ליווי וסגירת העסקה — ולכן החשבונית כוללת את דמי הליווי; (2) הכובע הראשי — ניהול הנכס ומציאת שוכר (דמי ניהול שוטפים אחרי כניסת דייר). הסכם הליווי וה-Operating Agreement עצמם מטופלים בשלב נפרד (חוזים), אחרי תשלום החשבונית."
-        },
-        {
-          "id": "p3_invoice",
-          "title": "חשבונית מנהל הנכס + תשלום כל הסגירות",
-          "owner": "pm",
-          "track": "both",
-          "depends_on": ["p3_intro"],
-          "documents": [
-            { "id": "pm_invoice", "label": "חשבונית: בדק בית (inspection), שמאות (appraisal), תריסים+שלט חניה, דמי ליווי (מעוגנים בחוזה הליווי), LLC/CPA, פיקדונות חברות תשתית", "provided_by": "pm", "track": "both", "required": true, "upload": true },
-            { "id": "mortgage_doc_fwd", "label": "מסמך משכנתא — מגיע מתישהו בשלב זה; יוסי מעביר אותו למשקיעים עם הסבר קצר בכמה מילים", "provided_by": "yossi", "track": "financed", "required": false, "upload": false }
-          ],
-          "notes": "מעבירים למנהל הנכס את הכסף עבור כל הסגירות. ניהול שוטף 8% מהשכירות מתחיל אחרי שהדייר נכנס."
-        },
-        {
-          "id": "p3_insurance",
-          "title": "ביטוח דירה (מנהל הנכס מנפיק)",
-          "owner": "pm",
-          "track": "both",
-          "depends_on": ["p2_contract"],
-          "documents": [
-            { "id": "home_insurance_policy", "label": "פוליסת ביטוח דירה — מנהל הנכס מנפיק אותה כחלק מתהליך הרכישה והמשכנתא, ושולח אותה ללקוח", "provided_by": "pm", "track": "both", "required": true, "upload": true }
-          ],
-          "notes": "בוחרים פוליסה מקיפה (סוג TDP3) — מה שרוב המשקיעים לוקחים. יש זולות יותר עם כיסוי מצומצם; ההפרש (כ-150-200 דולר לשנה) קטן ביחס לכיסוי הנוסף: אחריות, אובדן שכר דירה במקרה נזק לנכס, וכיסוי לפי עלות הבנייה מחדש של הבית. עלות צפויה כ-1,200-1,300 דולר לשנה, תלוי בגודל הנכס ובתנאי החיתום. ביטוח הצפות אינו כלול — כשהנכס מחוץ לאזור הצפה מוגדר, הבנק אינו דורש אותו."
-        },
-        {
-          "id": "p3_contracts",
-          "title": "חוזים: הסכם הליווי + Operating Agreement + מנהל הנכס",
-          "owner": "yossi",
-          "track": "both",
-          "depends_on": ["p3_invoice"],
-          "documents": [
-            { "id": "aspect_voice", "label": "הודעה קולית מיוסי על הסכם הליווי — מסבירה שזה מסמך קצר של עמוד אחד שנועד בעיקר להסביר את מעבר הכספים (דמי הליווי)", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "oa_voice", "label": "הודעה קולית נפרדת מיוסי על ה-Operating Agreement — מסבירה שזה מסמך סטנדרטי שאפשר לשנות יום אחרי, שיוסי הגדיר אותו לפי הרואה חשבון והכניס בו רק את הפרטים שלהם", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "contracts_email_versions", "label": "מייל מיוסי עם הגרסאות: עותק מסומן בצהוב (להמחשה) + עותק לחתימה — כדי שיוכלו לעיין ולשנות בהמשך אם ירצו", "provided_by": "yossi", "track": "both", "required": true, "upload": false },
-            { "id": "remote_signing", "label": "רק אחרי כל אלה (ואחרי תשלום החשבונית): יוסי שולח את שני החוזים — הסכם הליווי וה-Operating Agreement — לחתימה מרחוק מהירה", "provided_by": "yossi", "track": "both", "required": true, "upload": true },
-            { "id": "pm_agreement", "label": "חוזה ניהול מול מנהל הנכס (טופס TXR-2201) — נחתם דרך מערכת מנהל הנכס, לא דרך יוסי", "provided_by": "pm", "track": "both", "required": true, "upload": true }
-          ],
-          "notes": "סדר הטיפול בהסכם הליווי וב-Operating Agreement: (1) הודעה קולית על הסכם הליווי; (2) הודעה קולית נפרדת על ה-Operating Agreement; (3) מייל עם עותק מסומן בצהוב + עותק לחתימה (לעיון ולשינויים עתידיים); (4) ורק אז שליחת שני החוזים לחתימה מרחוק מהירה — אחרי תשלום החשבונית, כדי לא להעמיס הכל בבת אחת. חוזה ניהול הנכס (טופס TXR-2201) נחתם בנפרד דרך מערכת מנהל הנכס."
-        }
-      ]
-    },
-    {
-      "id": "p4_loan",
-      "title": "מסמכי הלוואה (clear-to-close מול המלווה)",
-      "owner": "יוסי+משקיע",
-      "track": "financed",
-      "timing": "מתחיל רק אחרי חתימת החוזה + תשלום המקדמה. המסמכים נאספים מהלקוח דרך מנהל הנכס במקביל.",
-      "steps": [
-        {
-          "id": "p4_clear_to_close",
-          "title": "חבילת clear-to-close",
-          "owner": "investor",
-          "track": "financed",
-          "depends_on": ["p2_contract"],
-          "documents": [
-            { "id": "operating_agreement", "label": "Operating Agreement של ה-LLC", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
-            { "id": "ein_letter_loan", "label": "מכתב הנפקת EIN (IRS)", "provided_by": "yossi", "track": "financed", "required": true, "upload": true },
-            { "id": "mercury_2mo", "label": "דפי חשבון Mercury של חודשיים", "provided_by": "investor", "track": "financed", "required": true, "upload": true },
-            { "id": "earnest_txn_history", "label": "היסטוריית תנועות שמראה את תשלום המקדמה (אם לא מופיע בדפי החשבון)", "provided_by": "investor", "track": "financed", "required": false, "upload": true },
-            { "id": "credit_worthiness", "label": "כושר אשראי — אחד מ: דוח אשראי בינלאומי / מכתב המלצת אשראי / דפי חשבון מישראל 60 יום אחורה", "provided_by": "investor", "track": "financed", "required": true, "upload": true },
-            { "id": "il_account_ownership", "label": "אישור ניהול חשבון מהבנק הישראלי (באנגלית) — נדרש כשבוחרים בחלופת העו״ש הישראלי: מקשר את בעל החשבון לעו״ש ומשם לבעלי ה-LLC, כדי שהמלווה יזהה את החשבון ואת בעליו", "provided_by": "investor", "track": "financed", "required": false, "upload": true },
-            { "id": "lender_address_proof", "label": "אימות כתובת למלווה (באנגלית) — אימות שני, נפרד מזה שבפתיחת הבנק. אחת מ-3 חלופות לפי חוזק: (1) הזדהות ממשלתית ממשרד הפנים / אתר ההזדהות — החזקה ביותר; (2) ספח תעודת זהות — הנוחה להכנה ולתרגום; (3) ארנונה או דומה (כמו בפתיחת הבנק). חובה שהכתובת הרשומה ושם הבעלים יופיעו במסמך", "provided_by": "investor", "track": "financed", "required": true, "upload": true }
-          ],
-          "notes": "דגל תרגום: כל מסמך שאינו באנגלית דורש תרגום מקצועי לאנגלית. המסמכים נאספים מהלקוח דרך מנהל הנכס במקביל לסגירות. כשכושר האשראי מסופק כעו״ש ישראלי 60 יום — מצרפים אליו אישור ניהול חשבון שמקשר את בעל החשבון לעו״ש ולבעלי ה-LLC (סגירת מעגל הזיהוי). אימות הכתובת כאן הוא אימות שני (נפרד מזה שבפתיחת הבנק) ועבור המלווה — 3 חלופות לפי חוזק, והעדיפה היא ההזדהות הממשלתית ממשרד הפנים."
-        }
-      ]
-    },
-    {
-      "id": "p5_closing",
-      "title": "חתימה וסגירה",
-      "owner": "title/escrow",
-      "track": "both",
-      "steps": [
-        {
-          "id": "p5_sign_wire",
-          "title": "אישור משכנתא ← חתימה ← העברת יתרה ← סגירה",
-          "owner": "investor",
-          "track": "both",
-          "depends_on": ["p4_clear_to_close", "p3_invoice"],
-          "documents": [
-            { "id": "closing_docs", "label": "כל מסמכי החתימה בפורטל ה-title/escrow", "provided_by": "title", "track": "both", "required": true, "upload": false },
-            { "id": "notary_mail", "label": "חתימה מול נוטריון ושליחת מסמכי הסגירה בדואר לכתובת ה-title company בארה״ב (פר-עסקה) — מנהל הנכס ממשיך מול הלקוח על המסמכים לחתימה", "provided_by": "investor", "track": "both", "required": true, "upload": false },
-            { "id": "balance_wire", "label": "העברת היתרה (הוראות ההעברה בפורטל) — חתימה שנייה ותשלום היתרה, וזהו", "provided_by": "investor", "track": "both", "required": true, "upload": false }
-          ],
-          "notes": "במסלול מימון — אחרי שהמשכנתא מאושרת. במזומן — חתימה והעברת יתרה ישירות. שלב הסגירה: חתימה שנייה (מול נוטריון) + תשלום היתרה. כתובת ה-title company למשלוח שמורה בקנוני הפנימי (לא באתר הציבורי)."
-        },
-        {
-          "id": "p5_tenant",
-          "title": "איתור שוכר (במקביל / שלב הבא)",
-          "owner": "pm",
-          "track": "both",
-          "depends_on": ["p5_sign_wire"],
-          "documents": [
-            { "id": "find_tenant", "label": "איתור שוכר והכנסת דייר", "provided_by": "pm", "track": "both", "required": false, "upload": false }
-          ],
-          "notes": "מתחיל במקביל לסגירה אבל לא קריטי כרגע — לטיפול בהמשך. ניהול שוטף 8% מתחיל כשהדייר נכנס."
-        }
-      ]
-    }
-  ],
-  "resolved": [
-    "׳מסמך מס׳ = הצהרת רשות המסים בישראל (כלי פנימי), לא אמריקאי. ממוקם ב-p1b_fund.",
-    "POF יורד מיד עם ההעברה הגדולה ונשלח למלווה לפני שהקבלן מחפש בית (p1b_pof).",
-    "נתוני היציבות עברו לשלב ״אפשר להתקדם״ (p2_ready) — נשלחים לקבלן, ואינם חלק מחבילת ההלוואה.",
-    "שלב ההלוואה מתחיל רק אחרי חתימת חוזה + תשלום מקדמה. המסמכים נאספים דרך מנהל הנכס במקביל.",
-    "מסלול מזומן מדלג רק על p4_loan (מימון). כל השאר זהה.",
-    "מקדמה (earnest): החוזה נחתם בשרשרת (משקיע ← שותף ← יוסי לאימות סכום), וההעברה מתבצעת דרך לינק מקוון מהקבלן.",
-    "כושר אשראי בחלופת העו״ש הישראלי 60 יום: מצרפים אישור ניהול חשבון שמקשר את בעל החשבון → העו״ש → בעלי ה-LLC, לזיהוי החשבון ובעליו ע״י המלווה (הבהרת יוסי 05/06).",
-    "שני אימותי כתובת נפרדים: (1) בפתיחת חשבון הבנק (p1b_open) — חשבון חשמל/ארנונה מספיק; (2) למלווה ב-clear-to-close (p4) — 3 חלופות לפי חוזק: הזדהות ממשלתית ממשרד הפנים (החזקה ביותר) / ספח תעודת זהות / ארנונה. בשתיהן חובה: כתובת רשומה + שם הבעלים (הבהרת יוסי 05/06)."
-  ],
-  "open_items": [
-    "הסכם ייצוג (Representation Agreement) הוסר מ-p2_contract — לאשר אם הוא דבר נפרד מחוזה חברת הליווי / חוזה מנהל הנכס, או שאפשר לוותר עליו.",
-    "מיפוי מקבילי-מול-סדרתי: לאשר אילו שלבים רצים במקביל (הזרמת כספים בזמן הכנות, איתור שוכר בזמן סגירה) מול תלויות נוקשות."
-  ]
-}
-</script>
-
-<script>
-  let DATA = null;
-  let mode = 'financed';
-  let stepTitleById = {};
-
-  const OWNER_HE = { investor:'משקיע', yossi:'יוסי', builder:'קבלן', pm:'מנהל נכס', title:'Title', 'title/escrow':'Title/Escrow', cpa:'CPA' };
-
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  function ownerLabel(o){ if(!o) return ''; return OWNER_HE[o.toLowerCase()] || o; }
-  function depsLabel(d){ if(!d||!d.length) return ''; return d.map(id=>stepTitleById[id]||id).join(' · '); }
-  function docHTML(d){
-    const src = d.source ? `<div class="src">מקור: ${esc(d.source)}</div>` : '';
-    return `<li class="doc" data-track="${esc(d.track)}"><span class="doc-label">${esc(d.label)}</span>${src}</li>`;
-  }
-
-  function stepHTML(s){
-    const fin = s.track==='financed' ? '<span class="tag">מימון</span>' : '';
-    const owner = s.owner ? `<div class="meta-line"><b>אחראי:</b> ${esc(ownerLabel(s.owner))}</div>` : '';
-    const docs = s.documents || [];
-    const deps = depsLabel(s.depends_on);
-    const depsLine = deps ? `<div class="deps">תלוי ב: ${esc(deps)}</div>` : '';
-    const notes = s.notes ? `<div class="note">${esc(s.notes)}</div>` : '';
-    const docsHTML = docs.length ? `<ol class="docs">${docs.map(docHTML).join('')}</ol>` : '<div class="empty">— אין מסמכים בשלב זה —</div>';
-    return `<div class="step" data-track="${esc(s.track)}">
-      <div class="step-head"><span class="step-title">${esc(s.title)}</span>${fin}<span class="marker"></span></div>
-      <div class="step-body">${owner}${depsLine}${docsHTML}${notes}</div>
-    </div>`;
-  }
-
-  function phaseHTML(p){
-    const fin = p.track==='financed' ? '<span class="tag">מימון</span>' : '';
-    const timing = p.timing ? `<div class="meta-line"><b>תזמון:</b> ${esc(p.timing)}</div>` : '';
-    const steps = (p.steps||[]).map(stepHTML).join('');
-    return `<div class="phase" data-track="${esc(p.track)}">
-      <div class="phase-head">
-        <span class="phase-num"></span>
-        <span class="phase-title">${esc(p.title)}</span>
-        ${fin}
-        <span class="marker"></span>
-      </div>
-      <div class="phase-body">${timing}${steps}</div>
-    </div>`;
-  }
-
-  function renderAbout(){
-    const m = DATA.meta||{};
-    const resolved = (DATA.resolved||[]).map(x=>`<li>${esc(x)}</li>`).join('');
-    const open = (DATA.open_items||[]).map(x=>`<li>${esc(x)}</li>`).join('');
-    document.getElementById('about-body').innerHTML =
-      (m.versions_note?`<div class="note">${esc(m.versions_note)}</div>`:'') +
-      (resolved?`<h4>הוכרע (resolved)</h4><ul>${resolved}</ul>`:'') +
-      (open?`<h4>פתוח (open items)</h4><ul class="open">${open}</ul>`:'');
-  }
-
-  function render(){
-    stepTitleById = {};
-    DATA.phases.forEach(p=>(p.steps||[]).forEach(s=>{ stepTitleById[s.id]=s.title; }));
-    document.getElementById('phases').innerHTML = DATA.phases.map(phaseHTML).join('');
-    const m = DATA.meta||{};
-    document.getElementById('subline').textContent =
-      `גרסה ${m.version||'—'} · מסלול מימון מציג הכל · מזומן מדלג על שלב ההלוואה`;
-    renderAbout();
-    applyTrack();
-  }
-
-  function applyTrack(){
-    const cash = mode==='cash';
-    document.body.classList.toggle('mode-cash', cash);
-    let n=0;
-    document.querySelectorAll('#phases .phase').forEach(ph=>{
-      if(cash && ph.dataset.track==='financed') return;
-      n++;
-      const b=ph.querySelector('.phase-num'); if(b) b.textContent=n+'.';
-    });
-  }
-
-  function setAll(open){
-    document.querySelectorAll('#phases .phase, #phases .step').forEach(el=>el.classList.toggle('open', open));
-  }
-
-  function setSource(kind){
-    const el=document.getElementById('src-ind');
-    if(kind==='external'){ el.textContent='נטען מ-full-process.json'; el.className='src-ind ext'; }
-    else { el.textContent='snapshot מוטמע'; el.className='src-ind emb'; }
-  }
-
-  // Accordion (event delegation)
-  document.addEventListener('click', e=>{
-    const ph=e.target.closest('.phase-head'); if(ph){ ph.parentElement.classList.toggle('open'); return; }
-    const st=e.target.closest('.step-head'); if(st){ st.parentElement.classList.toggle('open'); return; }
-    const ab=e.target.closest('.about-head'); if(ab){ ab.parentElement.classList.toggle('open'); return; }
-  });
-
-  // Track toggle
-  document.querySelectorAll('.track-toggle button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      mode=b.dataset.mode;
-      document.querySelectorAll('.track-toggle button').forEach(x=>x.classList.toggle('active', x===b));
-      applyTrack();
-    });
-  });
-
-  async function load(){
-    try{
-      const res = await fetch('./full-process.json', {cache:'no-store'});
-      if(!res.ok) throw new Error('http '+res.status);
-      DATA = await res.json();
-      setSource('external');
-    }catch(e){
-      DATA = JSON.parse(document.getElementById('embedded-data').textContent);
-      setSource('embedded');
-    }
-    render();
-  }
-  load();
-</script>
 </body>
 </html>
